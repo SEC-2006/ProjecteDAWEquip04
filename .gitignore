@@ -1,0 +1,48 @@
+# Relacionats amb Java
+target/**
+*.jar
+*.war
+*.ear
+*.class
+
+# Relacionats amb Eclipse
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# Eines externes
+.externalToolBuilders/
+
+# Configuracions de launch locals
+*.launch
+
+# Logs
+*.log
+
+# Fitxers generats pel Sistema Operatiu
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Fitxers de l'editor
+*~
+*.swp
+
+# Directoris d'eixida de builds
+/target
+*/target
+/build
+*/build
+/bin/
