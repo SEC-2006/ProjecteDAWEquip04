@@ -25,3 +25,5 @@ public class Main extends Application {
 		launch(args);
 	}
 }
+
+// actualitzat per ferran 2
