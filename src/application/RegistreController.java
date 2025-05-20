@@ -70,7 +70,7 @@ public class RegistreController {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
 
-			String urlBaseDades = "jdbc:mariadb://localhost:3306/ProjecteDAWEquip04";
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
 			String usuariBaseDades = "root";
 			String contrasenyaBaseDades = "root";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuariBaseDades, contrasenyaBaseDades);

@@ -64,7 +64,7 @@ public class SeleccionarController implements Initializable{
 		try {
 			VBox root = (VBox) FXMLLoader.load(getClass().getResource("PescaMines.fxml"));
 			Stage escena = new Stage();
-			escena.setTitle("PixelArt");
+			escena.setTitle("PescaMines");
 			escena.setScene(new Scene(root));
 			escena.show();
 		} catch (IOException e1) {
@@ -77,7 +77,7 @@ public class SeleccionarController implements Initializable{
 		try {
 			Pane root = (Pane) FXMLLoader.load(getClass().getResource("Wordle.fxml"));
 			Stage escena = new Stage();
-			escena.setTitle("PixelArt");
+			escena.setTitle("Wordle");
 			escena.setScene(new Scene(root));
 			escena.show();
 		} catch (IOException e1) {
