@@ -38,11 +38,18 @@ public class SeleccionarController implements Initializable{
 	
 	public void obrirPixelart(ActionEvent e) {
 		try {
-			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("PixelArt.fxml"));
+			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("Inici.fxml"));
 			Stage escena = new Stage();
 			escena.setTitle("PixelArt");
-			escena.setScene(new Scene(root));
+			
+			Scene scene = new Scene(root);
+					
+			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+			escena.setScene(scene);
 			escena.show();
+
+
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

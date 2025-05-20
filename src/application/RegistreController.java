@@ -72,7 +72,7 @@ public class RegistreController {
 
 			String urlBaseDades = "jdbc:mariadb://localhost:3306/ProjecteDAWEquip04";
 			String usuariBaseDades = "root";
-			String contrasenyaBaseDades = "";
+			String contrasenyaBaseDades = "root";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuariBaseDades, contrasenyaBaseDades);
 			//Confirmar que no existeix un usuari que es diga exactament igual
 			String sentenciaSelect = "SELECT * FROM Usuaris WHERE email=?";
