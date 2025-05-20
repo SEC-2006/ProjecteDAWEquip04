@@ -18,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class PrincipalController {
@@ -28,7 +29,7 @@ public class PrincipalController {
 	@FXML private Button registrarse;
 	@FXML private Button iniciarSesio;
 	
-	private Usuari user;
+	/*private Usuari user;
 
 	public void setUsuari(Usuari user) {
 		this.user = user;
@@ -36,7 +37,7 @@ public class PrincipalController {
 
 	public Usuari getUsuari() {
 		return this.user;
-	}
+	}*/
 	
 	public void obrirRegistrar(ActionEvent e) {
 		try {
@@ -78,13 +79,13 @@ public class PrincipalController {
 			}
 			else
 			{
-				setUsuari(new Usuari(email.getText()));
+				//setUsuari(new Usuari(email.getText()));
 
 				try {
-					GridPane registre = FXMLLoader.load(getClass().getResource("Seleccionar.fxml"));
+					VBox registre = FXMLLoader.load(getClass().getResource("Seleccionar.fxml"));
 					Scene escenaRegistre = new Scene(registre);
 					Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-					window.setUserData(user);
+					//window.setUserData(user);
 					window.setScene(escenaRegistre);
 					window.setTitle("Selecciona un joc");
 					window.show();

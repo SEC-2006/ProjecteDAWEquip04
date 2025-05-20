@@ -26,7 +26,7 @@ public class SeleccionarController implements Initializable{
 	@FXML private Button btnWordle;
 	@FXML private Label benvinguda;
 
-	private Usuari user;
+	/*private Usuari user;
 
 	public void setUsuari(Usuari user) {
 		this.user = user;
@@ -34,7 +34,7 @@ public class SeleccionarController implements Initializable{
 
 	public Usuari getUsuari() {
 		return this.user;
-	}
+	}*/
 	
 	public void obrirPixelart(ActionEvent e) {
 		try {
@@ -81,7 +81,7 @@ public class SeleccionarController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		benvinguda.setText("Benvingut "+getUsuari().getEmail()+"!");
+		//benvinguda.setText("Benvingut "+getUsuari().getEmail()+"!");
 		
 	}
 
