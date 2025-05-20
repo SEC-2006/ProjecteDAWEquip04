@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.WordleController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f0f0f0;">
+         <children>
+            <Label text="WORDLE">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="System Bold" size="28.0" />
+               </font>
+            </Label>
+            <GridPane fx:id="panellJoc" alignment="TOP_CENTER" prefHeight="322.0" prefWidth="800.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <VBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="180.0" right="180.0" top="10.0" />
+               </padding>
+               <children>
+                  <HBox fx:id="Pos10" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos00" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos20" alignment="CENTER" layoutX="275.0" layoutY="25.0" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos30" alignment="CENTER" layoutX="350.0" layoutY="20.0" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos40" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos01" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos11" alignment="CENTER" layoutX="195.0" layoutY="73.0" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos21" alignment="CENTER" layoutX="275.0" layoutY="73.0" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos31" alignment="CENTER" layoutX="355.0" layoutY="73.0" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos41" alignment="CENTER" layoutX="435.0" layoutY="73.0" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos02" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos12" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos22" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos32" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos42" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos03" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos13" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos23" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos33" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos43" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos04" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos14" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos24" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos34" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos44" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos05" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos15" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos25" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos35" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+                  <HBox fx:id="Pos45" alignment="CENTER" prefHeight="80.0" prefWidth="150.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5;" GridPane.columnIndex="4" GridPane.rowIndex="5">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </HBox>
+               </children>
+            </GridPane>
+            <GridPane alignment="CENTER" prefHeight="196.0" prefWidth="800.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <padding>
+                  <Insets bottom="20.0" left="70.0" right="70.0" top="20.0" />
+               </padding>
+               <children>
+                  <HBox fx:id="panellBotons" alignment="CENTER">
+                     <children>
+                        <Button fx:id="BtnQ" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_Q" prefHeight="40.0" prefWidth="50.0" text="Q" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="1">
+                     <children>
+                        <Button fx:id="BtnW" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_W" prefHeight="40.0" prefWidth="50.0" text="W" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="2">
+                     <children>
+                        <Button fx:id="BtnE" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_E" prefHeight="40.0" prefWidth="50.0" text="E" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="3">
+                     <children>
+                        <Button fx:id="BtnR" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_R" prefHeight="40.0" prefWidth="50.0" text="R" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="4">
+                     <children>
+                        <Button fx:id="BtnT" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_T" prefHeight="40.0" prefWidth="50.0" text="T" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="5">
+                     <children>
+                        <Button fx:id="BtnY" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_Y" prefHeight="40.0" prefWidth="50.0" text="Y" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="6">
+                     <children>
+                        <Button fx:id="BtnU" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_U" prefHeight="40.0" prefWidth="50.0" text="U" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="7">
+                     <children>
+                        <Button fx:id="BtnI" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_I" prefHeight="40.0" prefWidth="50.0" text="I" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="8">
+                     <children>
+                        <Button fx:id="BtnO" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_O" prefHeight="40.0" prefWidth="50.0" text="O" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="9">
+                     <children>
+                        <Button fx:id="BtnP" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_P" prefHeight="40.0" prefWidth="50.0" text="P" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnA" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_A" prefHeight="40.0" prefWidth="50.0" text="A" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnS" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_S" prefHeight="40.0" prefWidth="50.0" text="S" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnD" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_D" prefHeight="40.0" prefWidth="50.0" text="D" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnF" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_F" prefHeight="40.0" prefWidth="50.0" text="F" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnG" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_G" prefHeight="40.0" prefWidth="50.0" text="G" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnH" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_H" prefHeight="40.0" prefWidth="50.0" text="H" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="6" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnJ" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_J" prefHeight="40.0" prefWidth="50.0" text="J" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="7" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnK" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_K" prefHeight="40.0" prefWidth="50.0" text="K" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="8" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnL" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_L" prefHeight="40.0" prefWidth="50.0" text="L" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="BtnÑ" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_Ñ" prefHeight="40.0" prefWidth="50.0" text="Ñ" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnZ" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_Z" prefHeight="40.0" prefWidth="50.0" text="Z" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnX" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_X" prefHeight="40.0" prefWidth="50.0" text="X" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnC" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_C" prefHeight="40.0" prefWidth="50.0" text="C" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnV" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_V" prefHeight="40.0" prefWidth="50.0" text="V" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnB" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_B" prefHeight="40.0" prefWidth="50.0" text="B" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnN" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_N" prefHeight="40.0" prefWidth="50.0" text="N" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="8" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnEliminar" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_Eliminar" prefHeight="40.0" prefWidth="50.0" text="⌫" textAlignment="CENTER" textFill="RED" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.columnIndex="7" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnM" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_M" prefHeight="40.0" prefWidth="50.0" text="M" textAlignment="CENTER" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" GridPane.rowIndex="2">
+                     <children>
+                        <Button fx:id="BtnEnviar" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#Click_Enviar" prefHeight="40.0" prefWidth="50.0" text="✔" textAlignment="CENTER" textFill="#09ff00" wrapText="true">
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </children>
+</Pane>
