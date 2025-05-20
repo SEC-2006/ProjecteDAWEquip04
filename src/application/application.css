@@ -1,1 +1,43 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/* Fondo blanco para toda la ventana */
+.root {
+    -fx-background-color: white;
+    -fx-font-family: "Roboto", sans-serif;
+}
+
+/* Texto principal: BENVINGUT A PIXEL ART */
+#lbtitol {
+    -fx-fill: #3f51b5;             /* Azul */
+    -fx-font-size: 26px;           /* Más grande */
+    -fx-font-weight: bold;         /* Negrita */
+}
+
+/* Etiqueta "Tria el tamany del tauler" */
+#lbintroduccio {
+    -fx-text-fill: #3f51b5;        /* Azul */
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;       /* Sin negrita */
+    -fx-font-style: normal;        /* Sin cursiva */
+}
+
+/* RadioButtons: Xicotet, Mitja, Gran */
+#rdxicotet, #rdmitja, #rdgran {
+    -fx-text-fill: #3f51b5;        /* Azul */
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-font-style: normal;
+}
+
+/* Botón Acceptar pequeño */
+#btnacceptar {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;           /* Más pequeño */
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.0, 0, 2);
+}
+
+#btnacceptar:hover {
+    -fx-background-color: #45a049;
+}
