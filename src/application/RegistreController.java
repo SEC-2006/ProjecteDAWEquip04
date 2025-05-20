@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 public class RegistreController {
 	
 	@FXML private GridPane registre;
-	@FXML private TextField usuari;
 	@FXML private PasswordField contrasenya;
 	@FXML private TextField nom;
 	@FXML private TextField cognoms;
@@ -76,26 +75,24 @@ public class RegistreController {
 			String contrasenyaBaseDades = "";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuariBaseDades, contrasenyaBaseDades);
 			//Confirmar que no existeix un usuari que es diga exactament igual
-			String sentenciaSelect = "SELECT * FROM Usuaris WHERE usuari=?";
+			String sentenciaSelect = "SELECT * FROM Usuaris WHERE email=?";
 			PreparedStatement sSelect = c.prepareStatement(sentenciaSelect);
-			sSelect.setString(1, usuari.getText());
+			sSelect.setString(1, email.getText());
 			ResultSet rSelect = sSelect.executeQuery();
+			sSelect.close();
 			int i = 0;
 			while (rSelect.next()) i++;
 			if(i==0) {
 				
 				String errors = "";
 				
-				String valorUsuari = usuari.getText();
 				String valorContrasenya = contrasenya.getText();
 				String valorNom = nom.getText();
 				String valorCognoms = cognoms.getText();
 				Image  valorImatgeSeleccionada = imatgeSeleccionada.getImage();
 				String valorPoblacio = poblacio.getText();
 				String valorEmail = email.getText();
-								
-				if (valorUsuari.length()==0) errors += "No s'ha introduït un usuari\n";
-				else if (valorUsuari.length()>255) errors += "S'ha introduït un usuari massa llarg";
+				
 				if (valorContrasenya.length()<8) errors += "La contrasenya és molt curta\n";
 				else if (valorContrasenya.length()>255) errors += "S'ha introduït una contrasenya massa llarga";
 				if (valorNom.length()==0) errors += "No s'ha introduït un nom\n";
@@ -111,27 +108,27 @@ public class RegistreController {
 
 				if (errors.equals(""))
 				{
-					String sentencia = "INSERT INTO Usuaris(usuari, nom, cognoms, imatge, poblacio, email, contrasenya) VALUES (?, ?, ?, ?, ?, ?, ?);";
+					String sentencia = "INSERT INTO Usuaris(nom, cognoms, poblacio, email, contrasenya) VALUES (?, ?, ?, ?, ?);";
 					PreparedStatement s = c.prepareStatement(sentencia);
-					s.setString(1, valorUsuari);
-					s.setString(2, valorNom);
-					s.setString(3, valorCognoms);
+					s.setString(1, valorNom);
+					s.setString(2, valorCognoms);
 					
-					try (FileInputStream inputStream = new FileInputStream(imgFile.getAbsolutePath())) {
-		                s.setBinaryStream(4, inputStream, inputStream.available());
+					/*try (FileInputStream inputStream = new FileInputStream("github.png")) {
+		                s.setBlob(3, inputStream);
 		            } catch (IOException e1) {
 		                System.out.println(e1);
-		            }
+		            }*/
 					
-					s.setString(5, valorPoblacio);
-					s.setString(6, valorEmail);
-					s.setString(7, valorContrasenya);
+					s.setString(3, valorPoblacio);
+					s.setString(4, valorEmail);
+					s.setString(5, valorContrasenya);
 					ResultSet r = s.executeQuery();
+
 					
 					Alert alerta = new Alert(AlertType.INFORMATION);
 					alerta.setTitle("Registre");
 				    alerta.setHeaderText("Registre completat");
-				    alerta.setContentText("L'usuari "+valorUsuari+" s'ha registrat correctament");
+				    alerta.setContentText("L'usuari "+valorNom+" s'ha registrat correctament");
 				    alerta.showAndWait();
 					
 					obrirPrincipal(e);

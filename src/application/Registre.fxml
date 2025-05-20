@@ -27,7 +27,6 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Label text="Usuari:" />
       <Label text="Contrasenya:" GridPane.rowIndex="1" />
       <Label text="Nom:" GridPane.rowIndex="2" />
       <Label text="Cognoms:" GridPane.rowIndex="3" />
@@ -35,7 +34,6 @@
       <Label text="Poblacio:" GridPane.rowIndex="6" />
       <Label text="Email:" GridPane.rowIndex="7" />
       <PasswordField fx:id="contrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="usuari" GridPane.columnIndex="1" />
       <TextField fx:id="nom" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <TextField fx:id="cognoms" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <TextField fx:id="poblacio" GridPane.columnIndex="1" GridPane.rowIndex="6" />

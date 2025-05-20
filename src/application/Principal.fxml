@@ -19,11 +19,11 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Label text="Usuari:" />
+      <Label text="Email:" />
       <Label text="Contrasenya:" GridPane.rowIndex="1" />
       <Button fx:id="iniciarSesio" mnemonicParsing="false" onAction="#processarIniciarSesio" text="Iniciar sesió" GridPane.rowIndex="2" />
       <Button fx:id="registrarse" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#obrirRegistrar" text="Registrarse" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <PasswordField fx:id="contrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="usuari" GridPane.columnIndex="1" />
+      <TextField fx:id="email" GridPane.columnIndex="1" />
    </children>
 </GridPane>

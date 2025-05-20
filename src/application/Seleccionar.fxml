@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="benvinguda" alignment="CENTER" contentDisplay="CENTER" text="Benvingut [nom] [cognoms]!" />
+      <GridPane fx:id="principal" alignment="CENTER" hgap="10.0" prefHeight="221.0" prefWidth="501.0" vgap="10.0">
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+         <children>
+            <Button fx:id="btnPixelart" mnemonicParsing="false" onAction="#obrirPixelart" prefHeight="100.0" prefWidth="100.0" text="Pixelart" />
+            <Button fx:id="btnJocVida" mnemonicParsing="false" onAction="#obrirJocVida" prefHeight="100.0" prefWidth="100.0" text="Joc de la Vida" GridPane.columnIndex="1" />
+            <Button fx:id="btnPescaMines" mnemonicParsing="false" onAction="#obrirPescaMines" prefHeight="100.0" prefWidth="100.0" text="PescaMines" GridPane.rowIndex="1" />
+            <Button fx:id="btnWordle" mnemonicParsing="false" onAction="#obrirWordle" prefHeight="100.0" prefWidth="100.0" text="Wordle" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </children>
+</VBox>
