@@ -15,7 +15,9 @@ public class PescaMines {
 
     
    //Genera un GridPane que es el quadrat que dependra la mida de la dificultat
-    @FXML private GridPane quadratDfacil, quadratDmitja, quadratDdificil;
+    @FXML private GridPane quadratDfacil;
+    @FXML private GridPane quadratDmitja;
+    @FXML private GridPane quadratDdificil;
 
     @FXML
     public void initialize() {
@@ -65,11 +67,18 @@ public class PescaMines {
    //Creacio dels botons que cada una representa casella del joc
     private void crearQuadratJoc(GridPane taula, int files, int columnes) {
         
-    	
     //Eliminar tot el que hi haja de antes
         taula.getChildren().clear();
 
+        //espai en horizontal entre columnes
+        taula.setHgap(1);
         
+        //espai en vertical entre files
+        taula.setVgap(1);
+        
+        taula.setStyle("-fx-background-color: #222;");
+        
+      
    //Per cada posició del quadrat crea un boto i se afegeix
         for (int fila = 0; fila < files; fila++) {
         	
@@ -77,8 +86,14 @@ public class PescaMines {
             	
                 Button boto = new Button();
                 boto.setPrefSize(35, 35); 
+                
+                boto.setStyle("-fx-background-color: #d3d3d3;");
+                
                 taula.add(boto, columna, fila); 
             }
         }
+        
+        
+        
     }
 }
