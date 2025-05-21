@@ -110,7 +110,7 @@ public class PrincipalController {
 							VBox registre = FXMLLoader.load(getClass().getResource("Seleccionar.fxml"));
 							Scene escenaRegistre = new Scene(registre);
 							Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-							window.setUserData(new Usuari(email.getText(), rSelect.getString("Nom"), rSelect.getString("Cognoms")));
+							window.setUserData(new Usuari(rSelect.getInt("id"), email.getText(), rSelect.getString("Nom"), rSelect.getString("Cognoms")));
 							window.setScene(escenaRegistre);
 							window.setTitle("Selecciona un joc");
 							window.show();
