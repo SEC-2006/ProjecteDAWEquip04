@@ -3,12 +3,19 @@ package application;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Blob;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -74,7 +81,7 @@ public class RegistreController {
 			String usuariBaseDades = "root";
 			String contrasenyaBaseDades = "root";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuariBaseDades, contrasenyaBaseDades);
-			//Confirmar que no existeix un usuari que es diga exactament igual
+			//Confirmar que no existeix un usuari que tinga el mateix email
 			String sentenciaSelect = "SELECT * FROM Usuaris WHERE email=?";
 			PreparedStatement sSelect = c.prepareStatement(sentenciaSelect);
 			sSelect.setString(1, email.getText());
@@ -108,30 +115,61 @@ public class RegistreController {
 
 				if (errors.equals(""))
 				{
-					String sentencia = "INSERT INTO Usuaris(nom, cognoms, poblacio, email, contrasenya) VALUES (?, ?, ?, ?, ?);";
-					PreparedStatement s = c.prepareStatement(sentencia);
-					s.setString(1, valorNom);
-					s.setString(2, valorCognoms);
-					
-					/*try (FileInputStream inputStream = new FileInputStream("github.png")) {
-		                s.setBlob(3, inputStream);
-		            } catch (IOException e1) {
-		                System.out.println(e1);
-		            }*/
-					
-					s.setString(3, valorPoblacio);
-					s.setString(4, valorEmail);
-					s.setString(5, valorContrasenya);
-					ResultSet r = s.executeQuery();
+					//encriptar contrasenya
+					int longitudSalt = 16;
+					SecureRandom random = new SecureRandom();
+					byte[] salt = new byte[longitudSalt];
+					random.nextBytes(salt);
 
+					int fortalesa = 65536;
+					int longitudHash = 64*8;
+
+					KeySpec spec = new PBEKeySpec(valorContrasenya.toCharArray(), salt, fortalesa, longitudHash);
+					SecretKeyFactory factory;
 					
-					Alert alerta = new Alert(AlertType.INFORMATION);
-					alerta.setTitle("Registre");
-				    alerta.setHeaderText("Registre completat");
-				    alerta.setContentText("L'usuari "+valorNom+" s'ha registrat correctament");
-				    alerta.showAndWait();
+					try {
+						factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+						byte[] hash = factory.generateSecret(spec).getEncoded();
+						String valorSalt = Base64.getEncoder().encodeToString(salt);
+						String valorContrasenyaHash = Base64.getEncoder().encodeToString(hash);
+						
+						//insertar dades
+						//String sentencia = "INSERT INTO Usuaris(nom, cognoms, poblacio, email, contrasenya, salt, imatge) VALUES (?, ?, ?, ?, ?, ?, ?);";
+						String sentencia = "INSERT INTO Usuaris(nom, cognoms, poblacio, email, contrasenya, salt) VALUES (?, ?, ?, ?, ?, ?);";
+						PreparedStatement s = c.prepareStatement(sentencia);
+						s.setString(1, valorNom);
+						s.setString(2, valorCognoms);
+						s.setString(3, valorPoblacio);
+						s.setString(4, valorEmail);
+						s.setString(5, valorContrasenyaHash);
+						s.setString(6, valorSalt);
+						/*try (FileInputStream inputStream = new FileInputStream(imgFile)) {
+		                s.setBlob(7, inputStream);
+			            } catch (IOException e1) {
+			                System.out.println(e1);
+			            }*/
+						ResultSet r = s.executeQuery();
+
+						
+						Alert alerta = new Alert(AlertType.INFORMATION);
+						alerta.setTitle("Registre");
+					    alerta.setHeaderText("Registre completat");
+					    alerta.setContentText("L'usuari amb l'email "+valorEmail+" s'ha registrat correctament");
+					    alerta.showAndWait();
+						
+						obrirPrincipal(e);
+					} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
+						System.out.println(e1);
+						
+						Alert alerta = new Alert(AlertType.ERROR);
+						alerta.setTitle("Error");
+					    alerta.setHeaderText("Error");
+					    alerta.setContentText("Ha ocurrit un error inesperat");
+					    alerta.showAndWait();
+					}
 					
-					obrirPrincipal(e);
+					
+					
 				}
 				else
 				{
@@ -145,8 +183,8 @@ public class RegistreController {
 			} else {
 				Alert alerta = new Alert(AlertType.ERROR);
 			    alerta.setTitle("Error");
-			    alerta.setHeaderText("Error en el camp \"Usuari\"");
-			    alerta.setContentText("Ja existeix un Usuari amb el nom que has introduït");
+			    alerta.setHeaderText("Error en el camp \"Email\"");
+			    alerta.setContentText("Aquest email ja està registrat");
 			    alerta.showAndWait();
 			}
 
