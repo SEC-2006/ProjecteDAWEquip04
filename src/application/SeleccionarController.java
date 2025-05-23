@@ -52,7 +52,15 @@ public class SeleccionarController implements Initializable{
 	}
 	
 	public void obrirJocVida(ActionEvent e) {
-		
+		try {
+			VBox root = (VBox) FXMLLoader.load(getClass().getResource("JocVidaInici.fxml"));
+			Stage escena = new Stage();
+			escena.setTitle("Joc de la Vida");
+			escena.setScene(new Scene(root));
+			escena.show();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	public void obrirPescaMines(ActionEvent e) {
