@@ -1,6 +1,7 @@
 package application;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -86,7 +87,7 @@ public class JocVidaController implements Initializable{
 			{
 				int x = aleatori.nextInt(tamany);
 				int y = aleatori.nextInt(tamany);
-				if (this.caselles[x][y].getStyle() == "-fx-background-color:white;")
+				if (this.caselles[x][y].getStyle().equals("-fx-background-color:white;"))
 				{
 					i--;
 				}
@@ -98,7 +99,15 @@ public class JocVidaController implements Initializable{
 			//funcionament del joc
 			timeline = new Timeline(
 				new KeyFrame(Duration.millis(velocitat), event -> {
-					caselles = iteracio(caselles);
+					Label[][] novesCaselles = iteracio(caselles);
+					
+					Platform.runLater(() -> {
+			            for (int i = 0; i < tamany; i++) {
+			                for (int j = 0; j < tamany; j++) {
+			                    caselles[i][j].setStyle(novesCaselles[i][j].getStyle());
+			                }
+			            }
+			        });
 					
 					if (celules == 0) {
 			            timeline.stop();
@@ -113,13 +122,12 @@ public class JocVidaController implements Initializable{
 	public Label[][] iteracio(Label[][] casellesAbans)
 	{
 		this.celules = 0;
-		Label[][] casellesDespres = new Label[casellesAbans.length][casellesAbans.length];
-		for (int i=0; i<casellesAbans.length; i++)
-		{
-			for (int j=0; j<casellesAbans.length;j++)
-			{
-				casellesDespres[i][j] = casellesAbans[i][j];
-			}
+		Label[][] casellesDespres = new Label[casellesAbans.length][casellesAbans[0].length];
+		for (int i = 0; i < casellesAbans.length; i++) {
+		    for (int j = 0; j < casellesAbans[i].length; j++) {
+		        casellesDespres[i][j] = new Label();
+		        casellesDespres[i][j].setStyle(casellesAbans[i][j].getStyle());
+		    }
 		}
 		for (int x=0; x<casellesDespres.length; x++)
 		{
@@ -137,7 +145,9 @@ public class JocVidaController implements Initializable{
 					case "s" ->{casellesDespres = s(casellesAbans, casellesDespres, x);}
 					case "c" ->{casellesDespres = c(casellesAbans, casellesDespres, x, y);}
 				}
+
 			}
+			
 		}
 		return casellesDespres;
 	}
