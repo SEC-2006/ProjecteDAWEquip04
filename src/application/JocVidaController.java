@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -9,7 +10,10 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -35,6 +39,7 @@ public class JocVidaController implements Initializable{
 	
 	@FXML private Button pausar;
 	@FXML private Button reanudar;
+	@FXML private Button parar;
 	@FXML private Button velocitatMenys;
 	@FXML private Button velocitatMes;
 	
@@ -51,9 +56,69 @@ public class JocVidaController implements Initializable{
 	
 	public void pausarClick(ActionEvent e) {timeline.pause();}
 	public void reanudarClick(ActionEvent e) {timeline.play();}
-	public void velocitatMenysClick(ActionEvent e) {this.velocitat-=10; System.out.println("Velocitat-- "+velocitat);}
-	public void velocitatMesClick(ActionEvent e) {this.velocitat+=10; System.out.println("Velocitat++ "+velocitat);}
+	public void velocitatMenysClick(ActionEvent e)
+	{
+		if (velocitat>10)
+		{
+			this.velocitat-=10;
+			iniciarTimeline();
+		}
+	}
+	public void velocitatMesClick(ActionEvent e)
+	{
+		this.velocitat+=10;
+		iniciarTimeline();
+	}
+	public void pararClick(ActionEvent e)
+	{
+		try {
+			VBox registre = FXMLLoader.load(getClass().getResource("JocVidaFinal.fxml"));
+			Scene escenaRegistre = new Scene(registre);
+			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+			window.setUserData(new DadesJocVida(tamanyString, tamany, celules, totalCreades, totalMortes, totalGeneracions));
+			window.setScene(escenaRegistre);
+			window.setTitle("Dades del Joc de la vida");
+			window.show();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
 
+	
+	private void iniciarTimeline()
+	{
+	    if (timeline != null)
+	    {
+	        timeline.stop();
+	    }
+	    timeline = new Timeline(
+	        new KeyFrame(Duration.millis(this.velocitat), e -> {
+	            Label[][] novesCaselles = iteracio(caselles);
+
+	            Platform.runLater(() -> {
+	                for (int i = 0; i < tamany; i++)
+	                {
+	                    for (int j = 0; j < tamany; j++)
+	                    {
+	                        caselles[i][j].setStyle(novesCaselles[i][j].getStyle());
+	                    }
+	                }
+	            });
+	            labelCelules.setText("Cel·lules actuals: " + this.celules);
+	            labelTotalCreades.setText("Cel·lules creades en total: " + this.totalCreades);
+	            labelTotalMortes.setText("Cel·lules mortes en total: " + this.totalMortes);
+	            totalGeneracions++;
+	            if (celules == 0)
+	            {
+	                timeline.stop();
+	                pararClick(e);
+	            }
+	        })
+	    );
+	    timeline.setCycleCount(Timeline.INDEFINITE);
+	    timeline.play();
+	}
+	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Platform.runLater(()->{
@@ -116,27 +181,7 @@ public class JocVidaController implements Initializable{
 				}
 			}
 			//funcionament del joc
-			timeline = new Timeline(
-				new KeyFrame(Duration.millis(this.velocitat), event -> {
-					Label[][] novesCaselles = iteracio(caselles);
-					
-					Platform.runLater(() -> {
-			            for (int i = 0; i < tamany; i++) {
-			                for (int j = 0; j < tamany; j++) {
-			                    caselles[i][j].setStyle(novesCaselles[i][j].getStyle());
-			                }
-			            }
-			        });
-					labelCelules.setText("Cel·lules actuals: "+this.celules);
-					labelTotalCreades.setText("Cel·lules creades en total: "+this.totalCreades);
-					labelTotalMortes.setText("Cel·lules mortes en total: "+this.totalMortes);
-					if (celules == 0) {
-			            timeline.stop();
-			        }
-				})					
-			);
-			timeline.setCycleCount(Timeline.INDEFINITE);
-			timeline.play();
+			iniciarTimeline();
 		});
 	}
 	
