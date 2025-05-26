@@ -1,11 +1,18 @@
 package application;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Base64;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,15 +36,16 @@ public class PrincipalController {
 	@FXML private Button registrarse;
 	@FXML private Button iniciarSesio;
 	
-	/*private Usuari user;
+	//Objecte a compartir amb l'altra escena
+	private Usuari u;
 
-	public void setUsuari(Usuari user) {
-		this.user = user;
+	public void setUsuari(Usuari u) {
+		this.u = u;
 	}
 
 	public Usuari getUsuari() {
-		return this.user;
-	}*/
+		return this.u;
+	}
 	
 	public void obrirRegistrar(ActionEvent e) {
 		try {
@@ -61,41 +69,78 @@ public class PrincipalController {
 			String contrasenyaBaseDades = "root";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuariBaseDades, contrasenyaBaseDades);
 			
-			String sentenciaSelect = "SELECT * FROM Usuaris WHERE email=? AND contrasenya=?";
+			String sentenciaSelect = "SELECT * FROM Usuaris WHERE email=?";
 			PreparedStatement sSelect = c.prepareStatement(sentenciaSelect);
 			sSelect.setString(1, email.getText());
-			sSelect.setString(2, contrasenya.getText());
 			ResultSet rSelect = sSelect.executeQuery();
 			
-			int i = 0;
-			while (rSelect.next()) i++;
-			if(i==0)
+			if(!rSelect.next())
 			{
 				Alert alerta = new Alert(AlertType.ERROR);
 			    alerta.setTitle("Error");
 			    alerta.setHeaderText("Dades incorrectes");
-			    alerta.setContentText("Les dades que s'han introduït no coincideixen. Verifica l'usuari i la contrasenya i torna-ho a intentar");
+			    alerta.setContentText("El correu introduït no està registrat, introdueix un altre email o entra al formulari de registre per a crear un nou usuari");
 			    alerta.showAndWait();
 			}
 			else
 			{
-				//setUsuari(new Usuari(email.getText()));
+				//verificar contrasenya
+				String valorContrasenya = contrasenya.getText();
+				int fortalesa = 65536;
+				int longitudHash = 64*8;
+				
+				String valorContrasenyaHash = rSelect.getString("contrasenya");
+		        String valorSalt = rSelect.getString("salt");
 
+	            // Decodifica salt de Base64 a bytes
+	            byte[] salt = Base64.getDecoder().decode(valorSalt);
+
+	            // Calcula hash PBKDF2 con la contraseña introducida y el salt recuperado
+	            KeySpec spec = new PBEKeySpec(valorContrasenya.toCharArray(), salt, fortalesa, longitudHash);
+	            SecretKeyFactory factory;
 				try {
-					VBox registre = FXMLLoader.load(getClass().getResource("Seleccionar.fxml"));
-					Scene escenaRegistre = new Scene(registre);
-					Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-					//window.setUserData(user);
-					window.setScene(escenaRegistre);
-					window.setTitle("Selecciona un joc");
-					window.show();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+					factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+					byte[] hash = factory.generateSecret(spec).getEncoded();
+		            String valorContrasenyaHashCalculat = Base64.getEncoder().encodeToString(hash);
+		            
+		            if(valorContrasenyaHash.equals(valorContrasenyaHashCalculat))
+		            {
+		            	//redirigir a la seleccio de joc
+						try {
+							VBox registre = FXMLLoader.load(getClass().getResource("Seleccionar.fxml"));
+							Scene escenaRegistre = new Scene(registre);
+							Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+							window.setUserData(new Usuari(rSelect.getInt("id"), email.getText(), rSelect.getString("Nom"), rSelect.getString("Cognoms")));
+							window.setScene(escenaRegistre);
+							window.setTitle("Selecciona un joc");
+							window.show();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+		            }
+		            else
+		            {
+		            	
+		            }
+				} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
+					System.out.println(e1);
+					
+					Alert alerta = new Alert(AlertType.ERROR);
+					alerta.setTitle("Error");
+				    alerta.setHeaderText("Error");
+				    alerta.setContentText("Ha ocurrit un error inesperat");
+				    alerta.showAndWait();
 				}
-			
+				
 			}
 		} catch (ClassNotFoundException | SQLException e1) {
-			System.out.println(e1);;
+			System.out.println(e1);
+			
+			Alert alerta = new Alert(AlertType.ERROR);
+			alerta.setTitle("Error");
+		    alerta.setHeaderText("Error");
+		    alerta.setContentText("Ha ocurrit un error inesperat");
+		    alerta.showAndWait();
 		}
 		
 
