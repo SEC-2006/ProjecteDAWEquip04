@@ -43,9 +43,13 @@ public class SeleccionarController implements Initializable{
 			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("Inici.fxml"));
 			Stage escena = new Stage();
 			escena.setTitle("PixelArt");
+			escena.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			escena.setScene(scene);
 			escena.setUserData(this.u);
 			escena.setScene(new Scene(root));
 			escena.show();
+
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
