@@ -1,15 +1,16 @@
 package application;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -18,9 +19,24 @@ import javafx.stage.Window;
 import javafx.util.Duration;
 
 public class JocVidaController implements Initializable{
+	//				   colors
+	//
+	//				mort: black
+	//				 viu: white
+	//   acabat de morir: rgb(37, 37, 37)
+	//  acabat de naixer: rgb(202, 202, 202)
 	
 	@FXML private VBox principal;
 	@FXML private GridPane joc;
+	
+	@FXML private Label labelCelules;
+	@FXML private Label labelTotalCreades;
+	@FXML private Label labelTotalMortes;
+	
+	@FXML private Button pausar;
+	@FXML private Button reanudar;
+	@FXML private Button velocitatMenys;
+	@FXML private Button velocitatMes;
 	
 	private Timeline timeline;
 	private Label[][] caselles;
@@ -32,6 +48,11 @@ public class JocVidaController implements Initializable{
 	private int totalMortes;
 	private int totalGeneracions;
 	private int velocitat = 250;
+	
+	public void pausarClick(ActionEvent e) {timeline.pause();}
+	public void reanudarClick(ActionEvent e) {timeline.play();}
+	public void velocitatMenysClick(ActionEvent e) {this.velocitat-=10; System.out.println("Velocitat-- "+velocitat);}
+	public void velocitatMesClick(ActionEvent e) {this.velocitat+=10; System.out.println("Velocitat++ "+velocitat);}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -41,21 +62,19 @@ public class JocVidaController implements Initializable{
 			this.tamanyString = (String) window.getUserData();
 			switch(tamanyString) {
 				case "S" :{
-					this.tamany = 10;
-					this.celules = 10*10;
+					this.tamany = 15;
 					break;
 				}
 				case "M" :{
-					this.tamany = 18;
-					this.celules = 81;
+					this.tamany = 25;
 					break;
 				}
 				case "L" :{
-					this.tamany = 25;
-					this.celules = 156;
+					this.tamany = 35;
 					break;
 				}
 			}
+			this.celules = tamany*tamany/4;
 			joc.setMaxHeight(tamany*20);
 			joc.setMaxWidth(tamany*20);
 			joc.setPrefHeight(tamany*20);
@@ -98,7 +117,7 @@ public class JocVidaController implements Initializable{
 			}
 			//funcionament del joc
 			timeline = new Timeline(
-				new KeyFrame(Duration.millis(velocitat), event -> {
+				new KeyFrame(Duration.millis(this.velocitat), event -> {
 					Label[][] novesCaselles = iteracio(caselles);
 					
 					Platform.runLater(() -> {
@@ -108,7 +127,9 @@ public class JocVidaController implements Initializable{
 			                }
 			            }
 			        });
-					
+					labelCelules.setText("Cel·lules actuals: "+this.celules);
+					labelTotalCreades.setText("Cel·lules creades en total: "+this.totalCreades);
+					labelTotalMortes.setText("Cel·lules mortes en total: "+this.totalMortes);
 					if (celules == 0) {
 			            timeline.stop();
 			        }
@@ -200,15 +221,15 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[0][0].getStyle();
 		
 		int veines = 0;
-		if (baix.equals("-fx-background-color:white;")) veines++;
-		if (dreta.equals("-fx-background-color:white;")) veines++;
-		if (baixDreta.equals("-fx-background-color:white;")) veines++;
+		if (baix.equals("-fx-background-color:white;") || baix.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (dreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixDreta.equals("-fx-background-color:white;") || baixDreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[0][0].setStyle("-fx-background-color:black;");
+				casellesDespres[0][0].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -221,9 +242,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[0][0].setStyle("-fx-background-color:white;");
+				casellesDespres[0][0].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				celules++;
 				totalCreades++;
+			}
+			else
+			{
+				casellesDespres[0][0].setStyle("-fx-background-color:black;");
 			}
 		}
 		
@@ -237,15 +262,15 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[casellesAbans.length-1][0].getStyle();
 
 		int veines = 0;
-		if (baix.equals("-fx-background-color:white;")) veines++;
-		if (esquerra.equals("-fx-background-color:white;")) veines++;
-		if (baixEsquerra.equals("-fx-background-color:white;")) veines++;
+		if (baix.equals("-fx-background-color:white;") || baix.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (esquerra.equals("-fx-background-color:white;") || esquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixEsquerra.equals("-fx-background-color:white;") || baixEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[casellesDespres.length-1][0].setStyle("-fx-background-color:black;");
+				casellesDespres[casellesDespres.length-1][0].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -258,9 +283,14 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[casellesDespres.length-1][0].setStyle("-fx-background-color:white;");
+				casellesDespres[casellesDespres.length-1][0].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[casellesDespres.length-1][0].setStyle("-fx-background-color:black;");
+
 			}
 		}
 		
@@ -274,15 +304,15 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[0][casellesAbans[0].length-1].getStyle();
 		
 		int veines = 0;
-		if (dalt.equals("-fx-background-color:white;")) veines++;
-		if (dreta.equals("-fx-background-color:white;")) veines++;
-		if (daltDreta.equals("-fx-background-color:white;")) veines++;
+		if (dalt.equals("-fx-background-color:white;") || dalt.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (dreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltDreta.equals("-fx-background-color:white;") || daltDreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[0][casellesDespres[0].length-1].setStyle("-fx-background-color:black;");
+				casellesDespres[0][casellesDespres[0].length-1].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -295,9 +325,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[0][casellesDespres[0].length-1].setStyle("-fx-background-color:white;");
+				casellesDespres[0][casellesDespres[0].length-1].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[0][casellesDespres[0].length-1].setStyle("-fx-background-color:black;");
 			}
 		}
 		
@@ -311,15 +345,15 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[casellesAbans.length-1][casellesAbans[casellesAbans.length-1].length-1].getStyle();
 
 		int veines = 0;
-		if (dalt.equals("-fx-background-color:white;")) veines++;
-		if (esquerra.equals("-fx-background-color:white;")) veines++;
-		if (daltEsquerra.equals("-fx-background-color:white;")) veines++;
+		if (dalt.equals("-fx-background-color:white;") || dalt.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (esquerra.equals("-fx-background-color:white;") || esquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltEsquerra.equals("-fx-background-color:white;") || daltEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[casellesDespres.length-1][casellesDespres[casellesDespres.length-1].length-1].setStyle("-fx-background-color:black;");;
+				casellesDespres[casellesDespres.length-1][casellesDespres[casellesDespres.length-1].length-1].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -332,9 +366,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[casellesDespres.length-1][casellesDespres[casellesDespres.length-1].length-1].setStyle("-fx-background-color:white;");;
+				casellesDespres[casellesDespres.length-1][casellesDespres[casellesDespres.length-1].length-1].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[casellesDespres.length-1][casellesDespres[casellesDespres.length-1].length-1].setStyle("-fx-background-color:black;");
 			}
 		}
 
@@ -352,17 +390,17 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[x][0].getStyle();
 
 		int veines = 0;
-		if (baix.equals("-fx-background-color:white;")) veines++;
-		if (esquerra.equals("-fx-background-color:white;")) veines++;
-		if (dreta.equals("-fx-background-color:white;")) veines++;
-		if (baixEsquerra.equals("-fx-background-color:white;")) veines++;
-		if (baixDreta.equals("-fx-background-color:white;")) veines++;
+		if (baix.equals("-fx-background-color:white;") || baix.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (esquerra.equals("-fx-background-color:white;") || esquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (dreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixEsquerra.equals("-fx-background-color:white;") || baixEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixDreta.equals("-fx-background-color:white;") || baixDreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[x][0].setStyle("-fx-background-color:black;");
+				casellesDespres[x][0].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -375,9 +413,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[x][0].setStyle("-fx-background-color:white;");
+				casellesDespres[x][0].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[x][0].setStyle("-fx-background-color:black;");
 			}
 		}
 
@@ -394,17 +436,17 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[x][casellesAbans[x].length-1].getStyle();
 
 		int veines = 0;
-		if (dalt.equals("-fx-background-color:white;")) veines++;
-		if (esquerra.equals("-fx-background-color:white;")) veines++;
-		if (dreta.equals("-fx-background-color:white;")) veines++;
-		if (daltEsquerra.equals("-fx-background-color:white;")) veines++;
-		if (daltDreta.equals("-fx-background-color:white;")) veines++;
+		if (dalt.equals("-fx-background-color:white;") || dalt.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (esquerra.equals("-fx-background-color:white;") || esquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (dreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltEsquerra.equals("-fx-background-color:white;") || daltEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltDreta.equals("-fx-background-color:white;") || daltDreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[x][casellesDespres[x].length-1].setStyle("-fx-background-color:black;");
+				casellesDespres[x][casellesDespres[x].length-1].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -417,9 +459,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[x][casellesDespres[x].length-1].setStyle("-fx-background-color:white;");
+				casellesDespres[x][casellesDespres[x].length-1].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[x][casellesDespres[x].length-1].setStyle("-fx-background-color:black;");
 			}
 		}
 
@@ -436,17 +482,17 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[casellesAbans.length-1][y].getStyle();
 
 		int veines = 0;
-		if (dalt.equals("-fx-background-color:white;")) veines++;
-		if (baix.equals("-fx-background-color:white;")) veines++;
-		if (esquerra.equals("-fx-background-color:white;")) veines++;
-		if (daltEsquerra.equals("-fx-background-color:white;")) veines++;
-		if (baixEsquerra.equals("-fx-background-color:white;")) veines++;
+		if (dalt.equals("-fx-background-color:white;") || dalt.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baix.equals("-fx-background-color:white;") || baix.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (esquerra.equals("-fx-background-color:white;") || esquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltEsquerra.equals("-fx-background-color:white;") || daltEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixEsquerra.equals("-fx-background-color:white;") || baixEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[casellesDespres.length-1][y].setStyle("-fx-background-color:black;");
+				casellesDespres[casellesDespres.length-1][y].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -459,9 +505,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[casellesDespres.length-1][y].setStyle("-fx-background-color:white;");
+				casellesDespres[casellesDespres.length-1][y].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[casellesDespres.length-1][y].setStyle("-fx-background-color:black;");
 			}
 		}
 
@@ -478,17 +528,17 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[0][y].getStyle();
 
 		int veines = 0;
-		if (dalt.equals("-fx-background-color:white;")) veines++;
-		if (baix.equals("-fx-background-color:white;")) veines++;
-		if (dreta.equals("-fx-background-color:white;")) veines++;
-		if (daltDreta.equals("-fx-background-color:white;")) veines++;
-		if (baixDreta.equals("-fx-background-color:white;")) veines++;
+		if (dalt.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baix.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (dreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltDreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixDreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[0][y].setStyle("-fx-background-color:black;");
+				casellesDespres[0][y].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -501,9 +551,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[0][y].setStyle("-fx-background-color:white;");
+				casellesDespres[0][y].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[0][y].setStyle("-fx-background-color:black;");
 			}
 		}
 
@@ -524,20 +578,20 @@ public class JocVidaController implements Initializable{
 		String actual = casellesAbans[x][y].getStyle();
 
 		int veines = 0;
-		if (dalt.equals("-fx-background-color:white;")) veines++;
-		if (baix.equals("-fx-background-color:white;")) veines++;
-		if (esquerra.equals("-fx-background-color:white;")) veines++;
-		if (dreta.equals("-fx-background-color:white;")) veines++;
-		if (daltEsquerra.equals("-fx-background-color:white;")) veines++;
-		if (daltDreta.equals("-fx-background-color:white;")) veines++;
-		if (baixEsquerra.equals("-fx-background-color:white;")) veines++;
-		if (baixDreta.equals("-fx-background-color:white;")) veines++;
+		if (dalt.equals("-fx-background-color:white;") || dalt.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baix.equals("-fx-background-color:white;") || baix.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (esquerra.equals("-fx-background-color:white;") || esquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (dreta.equals("-fx-background-color:white;") || dreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltEsquerra.equals("-fx-background-color:white;") || daltEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (daltDreta.equals("-fx-background-color:white;") || daltDreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixEsquerra.equals("-fx-background-color:white;") || baixEsquerra.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
+		if (baixDreta.equals("-fx-background-color:white;") || baixDreta.equals("-fx-background-color:rgb(202, 202, 202);")) veines++;
 		
-		if(actual.equals("-fx-background-color:white;"))
+		if(actual.equals("-fx-background-color:white;") || actual.equals("-fx-background-color:rgb(202, 202, 202);"))
 		{
 			if(veines < 2 || veines > 3)
 			{
-				casellesDespres[x][y].setStyle("-fx-background-color:black;");
+				casellesDespres[x][y].setStyle("-fx-background-color:rgb(37, 37, 37);");
 				totalMortes++;
 			}
 			else
@@ -550,9 +604,13 @@ public class JocVidaController implements Initializable{
 		{
 			if(veines == 3)
 			{
-				casellesDespres[x][y].setStyle("-fx-background-color:white;");
+				casellesDespres[x][y].setStyle("-fx-background-color:rgb(202, 202, 202);");
 				totalCreades++;
 				celules++;
+			}
+			else
+			{
+				casellesDespres[x][y].setStyle("-fx-background-color:black;");
 			}
 		}
 		
