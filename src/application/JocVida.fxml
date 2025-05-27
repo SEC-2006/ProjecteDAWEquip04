@@ -43,7 +43,7 @@
             <Label fx:id="labelTotalCreades" text="Cel·lules creades en total: xx" GridPane.rowIndex="1" />
             <Label fx:id="labelTotalMortes" text="Cel·lules mortes en total: xx" GridPane.rowIndex="2" />
             <Button fx:id="pausar" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#pausarClick" prefHeight="30.0" prefWidth="100.0" text="Pausar" GridPane.columnIndex="1" />
-            <Button fx:id="reanudar" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#reanudarClick" prefHeight="30.0" prefWidth="100.0" text="Reanudar" GridPane.columnIndex="2" />
+            <Button fx:id="reanudar" disable="true" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#reanudarClick" prefHeight="30.0" prefWidth="100.0" text="Reanudar" GridPane.columnIndex="2" />
             <Button fx:id="velocitatMenys" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#velocitatMenysClick" prefHeight="30.0" prefWidth="100.0" text="Acelerar" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Button fx:id="velocitatMes" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#velocitatMesClick" prefHeight="30.0" prefWidth="100.0" text="Ralentizar" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>

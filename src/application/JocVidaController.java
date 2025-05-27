@@ -54,19 +54,31 @@ public class JocVidaController implements Initializable{
 	private int totalGeneracions;
 	private int velocitat = 250;
 	
-	public void pausarClick(ActionEvent e) {timeline.pause();}
-	public void reanudarClick(ActionEvent e) {timeline.play();}
+	public void pausarClick(ActionEvent e)
+	{
+		timeline.pause();
+		pausar.setDisable(true);
+		reanudar.setDisable(false);
+	}
+	public void reanudarClick(ActionEvent e)
+	{
+		timeline.play();
+		pausar.setDisable(false);
+		reanudar.setDisable(true);
+	}
 	public void velocitatMenysClick(ActionEvent e)
 	{
 		if (velocitat>10)
 		{
 			this.velocitat-=10;
+			if(velocitat<=10) velocitatMenys.setDisable(true);
 			iniciarTimeline();
 		}
 	}
 	public void velocitatMesClick(ActionEvent e)
 	{
 		this.velocitat+=10;
+		velocitatMenys.setDisable(false);
 		iniciarTimeline();
 	}
 	public void pararClick(ActionEvent e)
