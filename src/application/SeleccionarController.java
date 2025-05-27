@@ -45,7 +45,6 @@ public class SeleccionarController implements Initializable{
 			escena.setTitle("PixelArt");
 			escena.setScene(new Scene(root));
 			escena.setUserData(this.u);
-			escena.setScene(new Scene(root));
 			escena.show();
 
 

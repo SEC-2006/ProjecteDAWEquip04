@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-min-width: 400;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.IniciController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-min-width: 400;" stylesheets="@application.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.IniciController">
    <children>
       <Button fx:id="btnacceptar" layoutX="482.0" layoutY="304.0" mnemonicParsing="false" onAction="#paginaSeguent" text="Acceptar" />
       <Label fx:id="lbintroduccio" layoutX="60.0" layoutY="128.0" text="Tria el tamany del tauler:" />
@@ -17,6 +17,6 @@
          </toggleGroup></RadioButton>
       <RadioButton fx:id="rdmitja" layoutX="59.0" layoutY="200.0" mnemonicParsing="false" text="Mitja" toggleGroup="$tamany" />
       <RadioButton fx:id="rdgran" layoutX="60.0" layoutY="229.0" mnemonicParsing="false" text="Gran" toggleGroup="$tamany" />
-      <Text fx:id="lbtitol" layoutX="55.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BENVINGUT A PIXEL ART" textAlignment="CENTER" wrappingWidth="490.0" />
+      <Text fx:id="lbtitol" layoutX="55.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BENVINGUT A PIXELART" textAlignment="CENTER" wrappingWidth="490.0" />
    </children>
 </AnchorPane>
