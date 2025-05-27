@@ -2,26 +2,38 @@ package application;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class WordleController implements Initializable {
 
 	// gridpane
 	@FXML
 	private GridPane panellJoc;
+	@FXML
+	private Pane paneRoot;
 
 	// botons -------------------------
 	@FXML
@@ -155,11 +167,13 @@ public class WordleController implements Initializable {
 	private HBox Pos45;
 
 	public final static String RUTA_PARAULES = "WordleParaules.txt";
+	public final static int LONG_H = 5;
+	public final static int LONG_V = 6;
 	private char paraulaActual[] = { '-', '-', '-', '-', '-' };
 	private int filaActual = 0;
 	private int columnaActual = 0;
 	private String paraulaAdivinar = "";
-	private HBox[][] posicions = new HBox[6][5];
+	private HBox[][] posicions = new HBox[6][LONG_H];
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -209,6 +223,31 @@ public class WordleController implements Initializable {
 		posicions[5][2] = Pos25;
 		posicions[5][3] = Pos35;
 		posicions[5][4] = Pos45;
+
+		
+
+	}
+
+	// teclat
+	// --------------------------------------------------------------------------------------------------
+	public void detectaTecla(KeyEvent e) {
+		char aux = e.getText().charAt(0);
+		añadirLletra(aux);
+	}
+
+	// obrir pantalla de guanyar
+	// ------------------------------------------------------------------------------------------
+	public void obrirPrincipal(ActionEvent e) {
+		try {
+			VBox root2 = FXMLLoader.load(getClass().getResource("WordleFelicitats.fxml"));
+			Scene escenaGuanyar = new Scene(root2);
+			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
+			window.setScene(escenaGuanyar);
+			window.setTitle("MissatgeGuanyar");
+			window.show();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	// traurer la paraula aleatoria
@@ -229,7 +268,7 @@ public class WordleController implements Initializable {
 	// restableixer array
 	// ----------------------------------------------------------------------------------------------------
 	private void restableixerArray() {
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < LONG_H; i++) {
 			paraulaActual[i] = '-';
 		}
 	}
@@ -237,21 +276,45 @@ public class WordleController implements Initializable {
 	// comprobar si estan y ficar els colors a la graella
 	// ---------------------------------------------------------------------
 	private void comprobarSiEstan(String paraulaComprovar) {
+		Map<Character, Integer> contador = new HashMap<>();
 		String estil = "-fx-border-color: black; -fx-border-width: 3; -fx-border-radius: 5; -fx-background-radius: 7;";
+		boolean yaComprobat[] = new boolean[LONG_H];
 
-		// falta arreglar que no estiguen en groc cuant no estan mes repetides
-		for (int i = 0; i < 5; i++) {
-			char lletraJugador = paraulaComprovar.charAt(i);
-			HBox casilla = obtindrerPosicio(filaActual, i);
+		// contar paraules
+		for (int i = 0; i < LONG_H; i++) {
+			char lletraContador = Character.toUpperCase(paraulaAdivinar.charAt(i));
+			contador.put(lletraContador, contador.getOrDefault(lletraContador, 0) + 1);
+		}
 
-			if (lletraJugador == paraulaAdivinar.charAt(i)) {
-				// Vert
+		// vert
+		for (int i = 0; i < LONG_H; i++) {
+			char lletraComprovar = Character.toUpperCase(paraulaComprovar.charAt(i));
+			char lletraContador = Character.toUpperCase(paraulaAdivinar.charAt(i));
+			if (lletraComprovar == lletraContador) {
+				HBox casilla = obtindrerPosicio(filaActual, i);
 				casilla.setStyle(estil + "-fx-background-color: #6aaa64;");
-			} else if (paraulaAdivinar.indexOf(lletraJugador) != -1) {
-				// Groc
-				casilla.setStyle(estil + "-fx-background-color: #c9b458;");
-			} else {
-				// Gris
+				contador.put(lletraComprovar, contador.get(lletraComprovar) - 1);
+				yaComprobat[i] = true;
+			}
+		}
+
+		// groc
+		for (int i = 0; i < LONG_H; i++) {
+			if (yaComprobat[i] == false) {
+				char lletraComprovar = Character.toUpperCase(paraulaComprovar.charAt(i));
+				if (contador.getOrDefault(lletraComprovar, 0) > 0) {
+					yaComprobat[i] = true;
+					HBox casilla = obtindrerPosicio(filaActual, i);
+					casilla.setStyle(estil + "-fx-background-color: #c9b458;");
+					contador.put(lletraComprovar, contador.get(lletraComprovar) - 1);
+				}
+			}
+		}
+
+		// gris
+		for (int i = 0; i < LONG_H; i++) {
+			if (yaComprobat[i] == false) {
+				HBox casilla = obtindrerPosicio(filaActual, i);
 				casilla.setStyle(estil + "-fx-background-color: #787c7e;");
 			}
 		}
@@ -260,7 +323,7 @@ public class WordleController implements Initializable {
 	// añadir lletra
 	// ------------------------------------------------------------------------------------------
 	private void añadirLletra(char lletra) {
-		if (columnaActual < 5 && columnaActual >= 0) {
+		if (columnaActual < LONG_H && columnaActual >= 0) {
 			HBox casilla = obtindrerPosicio(filaActual, columnaActual);
 			casilla.getChildren().clear();
 			casilla.getChildren().add(new Text(String.valueOf(lletra)));
@@ -272,7 +335,7 @@ public class WordleController implements Initializable {
 	// obtindrer posicio
 	// ---------------------------------------------------------------------------------------
 	private HBox obtindrerPosicio(int fila, int columna) {
-		if (fila >= 0 && fila < 6 && columna >= 0 && columna < 5) {
+		if (fila >= 0 && fila < LONG_V && columna >= 0 && columna < LONG_H) {
 			return posicions[fila][columna];
 		}
 		return null;
@@ -396,27 +459,29 @@ public class WordleController implements Initializable {
 	public void Click_Enviar(ActionEvent e) {
 		int contador = 0;
 		String paraulaComprovar = "";
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < LONG_H; i++) {
 			if (paraulaActual[i] != '-') {
 				contador++;
 			}
 		}
-		if (contador == 5) {
-			for (int i = 0; i < 5; i++) {
+		if (contador == LONG_H) {
+			for (int i = 0; i < LONG_H; i++) {
 				paraulaComprovar += paraulaActual[i] + "";
 			}
 			if (paraulaComprovar.toUpperCase().equals(paraulaAdivinar.toUpperCase())) {
 				comprobarSiEstan(paraulaComprovar);
+				obrirPrincipal(e);
 			} else {
-				// colorets i tot el rollo
 				comprobarSiEstan(paraulaComprovar);
 
 				restableixerArray();
-				if (filaActual < 5) {
+				if (filaActual < LONG_H) {
 					columnaActual = 0;
 					filaActual++;
 				} else {
 					System.out.println("Has pergut");
+					System.out.println(paraulaAdivinar);
+
 				}
 			}
 		}
@@ -424,7 +489,7 @@ public class WordleController implements Initializable {
 
 	// boto de eliminar
 	public void Click_Eliminar(ActionEvent e) {
-		if (columnaActual <= 5 && columnaActual > 0) {
+		if (columnaActual <= LONG_H && columnaActual > 0) {
 			columnaActual--;
 			HBox casilla = obtindrerPosicio(filaActual, columnaActual);
 			casilla.getChildren().clear();
