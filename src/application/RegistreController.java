@@ -77,7 +77,7 @@ public class RegistreController {
 		try {
 			Class.forName("org.mariadb.jdbc.Driver");
 
-			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04?useSSL=false";
 			String usuariBaseDades = "root";
 			String contrasenyaBaseDades = "root";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuariBaseDades, contrasenyaBaseDades);
@@ -108,7 +108,7 @@ public class RegistreController {
 				else if (valorCognoms.length()>150) errors += "S'ha/n introduït un/s cognom/s massa llarg/s";
 				if (valorImatgeSeleccionada == null) errors += "No s'ha introduït una imatge\n";
 				if (valorPoblacio.length()==0) errors += "No s'ha introduït una població\n";
-				else if (!valorPoblacio.matches("^[A-za-z ]+$")) errors += "No s'ha introduït una població vàlida\n";
+				else if (!valorPoblacio.matches("^[A-za-z ÀÈÌÒÙÁÉÍÓÚÑàèìòùáéíóúñ]+$")) errors += "No s'ha introduït una població vàlida\n";
 				else if (valorPoblacio.length()>255) errors += "S'ha introduït una població massa llarga";
 				if (!valorEmail.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) errors += "No s'ha introduït un email vàlid\n";
 				else if (valorEmail.length()>255) errors += "S'ha introduït un email massa llarg";
@@ -134,8 +134,8 @@ public class RegistreController {
 						String valorContrasenyaHash = Base64.getEncoder().encodeToString(hash);
 						
 						//insertar dades
-						//String sentencia = "INSERT INTO Usuaris(nom, cognoms, poblacio, email, contrasenya, salt, imatge) VALUES (?, ?, ?, ?, ?, ?, ?);";
-						String sentencia = "INSERT INTO Usuaris(nom, cognoms, poblacio, email, contrasenya, salt) VALUES (?, ?, ?, ?, ?, ?);";
+						String sentencia = "INSERT INTO Usuaris(nom, cognoms, poblacio, email, contrasenya, salt, imatge) "
+								+ "VALUES (?, ?, ?, ?, ?, ?, ?);";
 						PreparedStatement s = c.prepareStatement(sentencia);
 						s.setString(1, valorNom);
 						s.setString(2, valorCognoms);
@@ -143,11 +143,12 @@ public class RegistreController {
 						s.setString(4, valorEmail);
 						s.setString(5, valorContrasenyaHash);
 						s.setString(6, valorSalt);
-						/*try (FileInputStream inputStream = new FileInputStream(imgFile)) {
-		                s.setBlob(7, inputStream);
+						try (FileInputStream inputStream = new FileInputStream(imgFile.getAbsolutePath())) {
+			                s.setBinaryStream(7, inputStream, inputStream.available());
+			                s.executeUpdate();
 			            } catch (IOException e1) {
-			                System.out.println(e1);
-			            }*/
+			                e1.printStackTrace();
+			            }
 						ResultSet r = s.executeQuery();
 
 						
