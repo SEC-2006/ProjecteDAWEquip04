@@ -98,12 +98,14 @@ public class JocVidaController implements Initializable{
 	public void pararClick(ActionEvent e)
 	{
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
 			VBox registre = FXMLLoader.load(getClass().getResource("JocVidaFinal.fxml"));
 			Scene escenaRegistre = new Scene(registre);
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 			window.setUserData(new DadesJocVida(tamanyString, tamany, celules, totalCreades, totalMortes, totalGeneracions));
 			window.setScene(escenaRegistre);
 			window.setTitle("Dades del Joc de la vida");
+			window.setOnCloseRequest(event -> contador.decrementJocVida());
 			window.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -167,7 +169,7 @@ public class JocVidaController implements Initializable{
 			}
 			this.celules = tamany*tamany/4;
 			joc.setMaxHeight(tamany*20);
-			joc.setMaxWidth(tamany*20);
+			joc.setMaxWidth(tamany			*20);
 			joc.setPrefHeight(tamany*20);
 			joc.setPrefWidth(tamany*20);
 			joc.setMinHeight(tamany*20);

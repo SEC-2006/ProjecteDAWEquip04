@@ -29,12 +29,14 @@ public class JocVidaIniciController {
 	
 	public void obrirXicotet(ActionEvent e) {
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
 			VBox jocvida = FXMLLoader.load(getClass().getResource("JocVida.fxml"));
 			Scene escenaJocVida = new Scene(jocvida);
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 			window.setScene(escenaJocVida);
 			window.setUserData("S");
 			window.setTitle("Joc de la Vida");
+			window.setOnCloseRequest(event -> contador.decrementJocVida());
 			window.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -43,12 +45,14 @@ public class JocVidaIniciController {
 	
 	public void obrirMitja(ActionEvent e) {
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
 			VBox jocvida = FXMLLoader.load(getClass().getResource("JocVida.fxml"));
 			Scene escenaJocVida = new Scene(jocvida);
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 			window.setScene(escenaJocVida);
 			window.setUserData("M");
 			window.setTitle("Joc de la Vida");
+			window.setOnCloseRequest(event -> contador.decrementJocVida());
 			window.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -57,12 +61,14 @@ public class JocVidaIniciController {
 	
 	public void obrirGran(ActionEvent e) {
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
 			VBox jocvida = FXMLLoader.load(getClass().getResource("JocVida.fxml"));
 			Scene escenaJocVida = new Scene(jocvida);
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 			window.setScene(escenaJocVida);
 			window.setUserData("L");
 			window.setTitle("Joc de la Vida");
+			window.setOnCloseRequest(event -> contador.decrementJocVida());
 			window.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();

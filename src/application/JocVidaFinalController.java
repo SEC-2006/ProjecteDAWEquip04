@@ -62,11 +62,13 @@ public class JocVidaFinalController implements Initializable{
 	public void tornarClick(ActionEvent e)
 	{
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
 			VBox jocvida = FXMLLoader.load(getClass().getResource("JocVidaInici.fxml"));
 			Scene escenaJocVida = new Scene(jocvida);
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 			window.setScene(escenaJocVida);
 			window.setTitle("Joc de la Vida");
+			window.setOnCloseRequest(event -> contador.decrementJocVida());
 			window.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();

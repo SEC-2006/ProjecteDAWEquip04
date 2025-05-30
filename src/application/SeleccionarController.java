@@ -57,6 +57,7 @@ public class SeleccionarController implements Initializable{
 			escena.setTitle("PixelArt");
 			escena.setScene(new Scene(root));
 			escena.setUserData(this.u);
+	        escena.setOnCloseRequest(event -> contador.decrementPixelArt());
 			escena.show();
 	        contador.incrementPixelArt();
 		} catch (IOException e1) {
@@ -79,6 +80,7 @@ public class SeleccionarController implements Initializable{
 			Stage escena = new Stage();
 			escena.setTitle("Joc de la Vida");
 			escena.setScene(new Scene(root));
+	        escena.setOnCloseRequest(event -> contador.decrementJocVida());
 			escena.show();
 			contador.incrementJocVida();
 		} catch (IOException e1) {
@@ -102,6 +104,7 @@ public class SeleccionarController implements Initializable{
 			escena.setTitle("PescaMines");
 			escena.setUserData(this.u);
 			escena.setScene(new Scene(root));
+	        escena.setOnCloseRequest(event -> contador.decrementPescaMines());
 			escena.show();
 			contador.incrementPescaMines();
 		} catch (IOException e1) {
@@ -125,6 +128,7 @@ public class SeleccionarController implements Initializable{
 			escena.setTitle("Wordle");
 			escena.setUserData(this.u);
 			escena.setScene(new Scene(root));
+	        escena.setOnCloseRequest(event -> contador.decrementWordle());
 			escena.show();
 			contador.incrementWordle();
 		} catch (IOException e1) {
