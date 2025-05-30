@@ -149,16 +149,7 @@ public class RegistreController {
 			            } catch (IOException e1) {
 			                e1.printStackTrace();
 			            }
-						ResultSet r = s.executeQuery();
-
-						
-						Alert alerta = new Alert(AlertType.INFORMATION);
-						alerta.setTitle("Registre");
-					    alerta.setHeaderText("Registre completat");
-					    alerta.setContentText("L'usuari amb l'email "+valorEmail+" s'ha registrat correctament");
-					    alerta.showAndWait();
-						
-						obrirPrincipal(e);
+						ResultSet r = s.executeQuery();						
 					} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
 						System.out.println(e1);
 						
@@ -167,10 +158,19 @@ public class RegistreController {
 					    alerta.setHeaderText("Error");
 					    alerta.setContentText("Ha ocurrit un error inesperat");
 					    alerta.showAndWait();
-					}
-					
-					
-					
+					} catch (SQLException e2){
+						System.out.println(e2);
+						/* nota: esta separat este error dels altres perquè aunque 
+						   l'usuari se registra correctament dona "Socket error" */
+					} finally {
+						Alert alerta = new Alert(AlertType.INFORMATION);
+						alerta.setTitle("Registre");
+					    alerta.setHeaderText("Registre completat");
+					    alerta.setContentText("L'usuari amb l'email "+valorEmail+" s'ha registrat correctament");
+					    alerta.showAndWait();
+						
+						obrirPrincipal(e);
+					}				
 				}
 				else
 				{
