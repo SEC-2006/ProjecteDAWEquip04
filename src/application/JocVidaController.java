@@ -57,21 +57,34 @@ public class JocVidaController implements Initializable{
 	public void pausarClick(ActionEvent e)
 	{
 		timeline.pause();
+		
 		pausar.setDisable(true);
+		pausar.setStyle("-fx-background-color: #a5d6a7; -fx-text-fill: #757575; -fx-font-weight: bold;");
+		
 		reanudar.setDisable(false);
+		reanudar.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;");
+
 	}
 	public void reanudarClick(ActionEvent e)
 	{
 		timeline.play();
+		
 		pausar.setDisable(false);
+		pausar.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;");
+		
 		reanudar.setDisable(true);
+		reanudar.setStyle("-fx-background-color: #a5d6a7; -fx-text-fill: #757575; -fx-font-weight: bold;");
 	}
 	public void velocitatMenysClick(ActionEvent e)
 	{
 		if (velocitat>10)
 		{
 			this.velocitat-=10;
-			if(velocitat<=10) velocitatMenys.setDisable(true);
+			if(velocitat<=10)
+			{
+				velocitatMenys.setDisable(true);
+				velocitatMenys.setStyle("-fx-background-color: #a5d6a7; -fx-text-fill: #757575; -fx-font-weight: bold;");
+			}
 			iniciarTimeline();
 		}
 	}
@@ -79,6 +92,7 @@ public class JocVidaController implements Initializable{
 	{
 		this.velocitat+=10;
 		velocitatMenys.setDisable(false);
+		velocitatMenys.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;");
 		iniciarTimeline();
 	}
 	public void pararClick(ActionEvent e)
