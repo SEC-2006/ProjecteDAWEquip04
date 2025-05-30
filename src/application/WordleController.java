@@ -4,10 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
@@ -17,14 +23,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -178,7 +187,8 @@ public class WordleController implements Initializable {
 	private String paraulaAdivinar = "";
 	private HBox[][] posicions = new HBox[LONG_V][LONG_H];
 	private Map<Character, String> prioritatsColors = new HashMap<>();
-	
+	List<String> llistatParaulesYaEstan = new ArrayList<>();
+
 	private Usuari u;
 
 	public void setUsuari(Usuari u) {
@@ -191,23 +201,28 @@ public class WordleController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		Platform.runLater(()->{
+
+		Platform.runLater(() -> {
 			paneRoot.requestFocus();
 			Window window = (Stage) paneRoot.getScene().getWindow();
 			this.u = (Usuari) window.getUserData();
+			File fitxerParaules = new File(RUTA_PARAULES);
+			List<String> llistatParaules = new ArrayList<>();
+			Random aleatori = new Random();
+
+			guardarParaules(fitxerParaules, llistatParaules);
+
+			boolean paraulaGastada = true;
+			while (paraulaGastada) {
+				paraulaAdivinar = llistatParaules.get(aleatori.nextInt(llistatParaules.size()));
+				if (llistatParaulesYaEstan.contains(paraulaAdivinar)) {
+				} else {
+					paraulaGastada = false;
+				}
+			}
+			System.out.println(paraulaAdivinar);
+
 		});
-		
-
-		File fitxerParaules = new File(RUTA_PARAULES);
-		List<String> llistatParaules = new ArrayList<>();
-		Random aleatori = new Random();
-
-		guardarParaules(fitxerParaules, llistatParaules);
-
-		paraulaAdivinar = llistatParaules.get(aleatori.nextInt(llistatParaules.size()));
-
-		System.out.println(paraulaAdivinar);
 
 		// posibles posicions per a la graella
 		// fila 0
@@ -269,26 +284,78 @@ public class WordleController implements Initializable {
 		}
 	}
 
-
 	// obrir pantalla de guanyar
 	// ------------------------------------------------------------------------------------------
 	public void obrirMisatge() {
-		try {
-			VBox root2 = FXMLLoader.load(getClass().getResource("WordleMisatge.fxml"));
-			Scene escenaGuanyar = new Scene(root2);
-			Stage window = (Stage) paneRoot.getScene().getWindow();
-			window.setScene(escenaGuanyar);
-			window.setUserData(new WordleDatos(this.u.getId(), this.u.getEmail(), this.u.getNom(), this.u.getCognoms(), paraulaAdivinar, guanyat, filaActual + 1));
-			window.setTitle("Missatge");
-			window.show();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+		ButtonType boto01 = new ButtonType("Tornar a intentar");
+		ButtonType boto02 = new ButtonType("Tornar al menù");
+		Alert alert = new Alert(AlertType.NONE, "Missatge Wordle", boto01, boto02);
+		alert.setTitle("Missatge");
+		alert.setHeaderText("Resultat de: " + this.u.getNom() + " " + this.u.getCognoms());
+		String missatge = "Paraula: " + paraulaAdivinar + "\n\nIntentos: " + (filaActual + 1)
+				+ "\n\nPuntuacio general: " + consultaIntentos();
+		alert.setContentText(missatge);
+
+		alert.setResizable(true);
+		alert.getDialogPane().setPrefSize(400, 300);
+		alert.getDialogPane().setStyle("-fx-background-color: #FF9999; -fx-font-size: 14px; -fx-font-weight: bold;");
+		if (guanyat) {
+			alert.getDialogPane().setStyle("-fx-background-color: #99FF99; -fx-font-size: 14px; -fx-font-weight: bold;");
 		}
+
+		Node header = alert.getDialogPane().lookup(".header-panel");
+		if (header != null) {
+			if (guanyat) {
+				header.setStyle("-fx-background-color: #66CC66;");
+			} else {
+				header.setStyle("-fx-background-color: #FF6666;");
+			}
+		}
+
+		Optional<ButtonType> resultat = alert.showAndWait();
+		if (resultat.get() == boto01) {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("Wordle.fxml"));
+				Pane root = loader.load();
+				Stage stageActual = (Stage) paneRoot.getScene().getWindow();
+				stageActual.setScene(new Scene(root));
+				stageActual.setTitle("Wordle");
+				stageActual.setUserData(this.u);
+				
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} else if (resultat.get() == boto02) {
+			Stage finestraActual = (Stage) paneRoot.getScene().getWindow();
+			finestraActual.close();
+		}
+
 	}
 
 	// traurer la paraula aleatoria
 	// ------------------------------------------------------------------------------------------
 	private void guardarParaules(File fitxerParaules, List<String> llistatParaules) {
+
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			String usuari = "root";
+			String contrasenya = "root";
+			Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+
+			String sentencia = "SELECT paraula FROM ParaulesWordle WHERE id = " + u.getId();
+			PreparedStatement s = c.prepareStatement(sentencia);
+			ResultSet rs = s.executeQuery();
+
+			while (rs.next()) {
+				String paraula = rs.getString("paraula");
+				llistatParaulesYaEstan.add(paraula);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		try {
 			Scanner lectorFitxer = new Scanner(fitxerParaules);
 			while (lectorFitxer.hasNextLine()) {
@@ -296,9 +363,52 @@ public class WordleController implements Initializable {
 			}
 			lectorFitxer.close();
 
-		} catch (FileNotFoundException e) {
+			if (llistatParaules.size() <= llistatParaulesYaEstan.size()) {
+				Class.forName("org.mariadb.jdbc.Driver");
+				String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+				String usuari = "root";
+				String contrasenya = "root";
+				Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+				String sentencia2 = "DELETE FROM ParaulesWordle WHERE id = " + u.getId();
+				PreparedStatement s = c.prepareStatement(sentencia2);
+				s.executeUpdate();
+				System.out.println("eliminat");
+			}
+
+		} catch (FileNotFoundException | SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	// traurer els intentos totals (puntuacio)
+	// ------------------------------------------------------------------------------------------
+	private int consultaIntentos() {
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			String usuari = "root";
+			String contrasenya = "root";
+			Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+
+			String sentencia = "SELECT victoria1, victoria2, victoria3, victoria4, victoria5, victoria6 FROM PartidesWordle WHERE id = "
+					+ u.getId();
+			PreparedStatement s = c.prepareStatement(sentencia);
+			ResultSet rs = s.executeQuery();
+			int contador = 0;
+			if (rs.next()) {
+				contador += rs.getInt("victoria1");
+				contador += rs.getInt("victoria2");
+				contador += rs.getInt("victoria3");
+				contador += rs.getInt("victoria4");
+				contador += rs.getInt("victoria5");
+				contador += rs.getInt("victoria6");
+			}
+			return contador;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	// restableixer array
@@ -492,6 +602,8 @@ public class WordleController implements Initializable {
 
 	}
 
+	// per a que els ya encertats no es solapen
+	// ------------------------------------------------------------------------------------------
 	private int obtindrePrioritat(String opcioColor) {
 		if (opcioColor == null) {
 			return 0;
@@ -559,10 +671,7 @@ public class WordleController implements Initializable {
 				comprobarSiEstan(paraulaComprovar);
 				System.out.println("Has guanyat");
 				guanyat = true;
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-				}
+				guardarEnBBDD(guanyat);
 				obrirMisatge();
 			} else {
 				comprobarSiEstan(paraulaComprovar);
@@ -572,12 +681,111 @@ public class WordleController implements Initializable {
 					columnaActual = 0;
 					filaActual++;
 				} else {
+					guardarEnBBDD(guanyat);
 					obrirMisatge();
 					System.out.println("Has pergut");
 
 				}
 			}
 		}
+	}
+
+	// funcio per a enviar datos de la partida a la base de datos
+	// ---------------------------------------------------------------------------------------
+	private void guardarEnBBDD(boolean victoriaDerrota) {
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			String usuari = "root";
+			String contrasenya = "root";
+			Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+
+			boolean existis = false;
+
+			String sentencia = "INSERT INTO ParaulesWordle (id, paraula) VALUES (?, ?)";
+			PreparedStatement s = c.prepareStatement(sentencia);
+			s.setInt(1, u.getId());
+			s.setString(2, paraulaAdivinar);
+			s.executeUpdate();
+
+			sentencia = "SELECT id FROM PartidesWordle WHERE id = " + u.getId();
+			s = c.prepareStatement(sentencia);
+			ResultSet rs = s.executeQuery();
+
+			// esto es si existis
+			if (rs.next()) {
+				existis = true;
+			}
+
+			if (existis) {
+				String columnaTabla = "";
+				switch (filaActual) {
+				case 0: {
+					columnaTabla = "victoria1";
+					break;
+				}
+				case 1: {
+					columnaTabla = "victoria2";
+					break;
+				}
+				case 2: {
+					columnaTabla = "victoria3";
+					break;
+				}
+				case 3: {
+					columnaTabla = "victoria4";
+					break;
+				}
+				case 4: {
+					columnaTabla = "victoria5";
+					break;
+				}
+				case 5: {
+					if (!victoriaDerrota) {
+						columnaTabla = "derrotes";
+						break;
+					}
+					columnaTabla = "victoria6";
+					break;
+				}
+				}
+
+				if (victoriaDerrota) {
+					sentencia = "UPDATE PartidesWordle SET " + columnaTabla + " = " + columnaTabla + " + 1 WHERE id = "
+							+ u.getId();
+					s = c.prepareStatement(sentencia);
+					s.executeUpdate();
+				} else {
+					sentencia = "UPDATE PartidesWordle SET derrotes = derrotes + 1 WHERE id = " + u.getId();
+					s = c.prepareStatement(sentencia);
+					s.executeUpdate();
+				}
+
+			} else {
+				int Añadir1victoriaODerrota[] = new int[7];
+				if (victoriaDerrota) {
+					Añadir1victoriaODerrota[filaActual] = 1;
+				} else {
+					Añadir1victoriaODerrota[6] = 1;
+				}
+
+				sentencia = "INSERT INTO PartidesWordle (id, victoria1, victoria2, victoria3, victoria4, victoria5, victoria6, derrotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				s = c.prepareStatement(sentencia);
+				s.setInt(1, u.getId());
+				s.setInt(2, Añadir1victoriaODerrota[0]);
+				s.setInt(3, Añadir1victoriaODerrota[1]);
+				s.setInt(4, Añadir1victoriaODerrota[2]);
+				s.setInt(5, Añadir1victoriaODerrota[3]);
+				s.setInt(6, Añadir1victoriaODerrota[4]);
+				s.setInt(7, Añadir1victoriaODerrota[5]);
+				s.setInt(8, Añadir1victoriaODerrota[6]);
+				s.executeUpdate();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	// click
