@@ -47,9 +47,9 @@ public class JocVidaFinalController implements Initializable{
 			
 			switch(jv.getTamanyString())
 			{
-				case "S": {jv.setTamanyString("Xicotet");break;}
-				case "M": {jv.setTamanyString("Mitjà");break;}
-				case "L": {jv.setTamanyString("Gran");break;}
+				case "S": {jv.setTamanyString("Xicotet"); break;}
+				case "M": {jv.setTamanyString("Mitjà"); break;}
+				case "L": {jv.setTamanyString("Gran"); break;}
 			}
 			
 			tamanyLabel.setText("Tamany seleccionat: "+jv.getTamanyString()+" ("+jv.getTamany()+"x"+jv.getTamany()+" caselles)");

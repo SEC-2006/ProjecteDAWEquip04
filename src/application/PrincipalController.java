@@ -120,7 +120,11 @@ public class PrincipalController {
 		            }
 		            else
 		            {
-		            	
+		            	Alert alerta = new Alert(AlertType.ERROR);
+					    alerta.setTitle("Error");
+					    alerta.setHeaderText("Dades incorrectes");
+					    alerta.setContentText("La contrasenya no coincideix. Prova un altra o inicia sesió desde un altre usuari");
+					    alerta.showAndWait();
 		            }
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
 					System.out.println(e1);

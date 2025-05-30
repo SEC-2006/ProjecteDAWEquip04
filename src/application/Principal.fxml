@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="principal" alignment="CENTER" hgap="10.0" prefHeight="500.0" prefWidth="450.0" vgap="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PrincipalController">
+<GridPane fx:id="principal" alignment="CENTER" hgap="10.0" prefHeight="170.0" prefWidth="342.0" style="-fx-background-color: #aed0f8; -fx-border-color: #4a90e2; -fx-padding: 20px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0); -fx-border-width: 3;" vgap="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PrincipalController">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -19,11 +19,11 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <Label text="Email:" />
-      <Label text="Contrasenya:" GridPane.rowIndex="1" />
-      <Button fx:id="iniciarSesio" mnemonicParsing="false" onAction="#processarIniciarSesio" text="Iniciar sesió" GridPane.rowIndex="2" />
-      <Button fx:id="registrarse" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#obrirRegistrar" text="Registrarse" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <PasswordField fx:id="contrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <TextField fx:id="email" GridPane.columnIndex="1" />
+      <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Email:" />
+      <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Contrasenya:" GridPane.rowIndex="1" />
+      <Button fx:id="iniciarSesio" mnemonicParsing="false" onAction="#processarIniciarSesio" style="-fx-background-color: #4a90e2; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-height: 40px; -fx-pref-width: 120px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Iniciar sesió" GridPane.rowIndex="2" />
+      <Button fx:id="registrarse" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#obrirRegistrar" style="-fx-background-color: #4a90e2; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-font-size: 14px; -fx-pref-height: 40px; -fx-pref-width: 120px; -fx-background-radius: 5px; -fx-border-radius: 5px;" text="Registrarse" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <PasswordField fx:id="contrasenya" style="-fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-border-color: #cccccc; -fx-background-color: #f9f9f9; -fx-font-size: 14px; -fx-padding: 5px;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <TextField fx:id="email" style="-fx-pref-height: 35px; -fx-background-radius: 5px; -fx-border-radius: 5px; -fx-border-color: #cccccc; -fx-background-color: #f9f9f9; -fx-font-size: 14px; -fx-padding: 5px;" GridPane.columnIndex="1" />
    </children>
 </GridPane>

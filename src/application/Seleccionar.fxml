@@ -6,10 +6,14 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SeleccionarController">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="270.0" minWidth="300.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SeleccionarController">
    <children>
-      <Label fx:id="benvinguda" alignment="CENTER" contentDisplay="CENTER" text="Benvingut [nom] [cognoms]!" />
+      <Label fx:id="benvinguda" alignment="CENTER" contentDisplay="CENTER" text="Benvingut [nom] [cognoms]!">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font></Label>
       <GridPane fx:id="principal" alignment="CENTER" hgap="10.0" prefHeight="221.0" prefWidth="501.0" vgap="10.0">
          <columnConstraints>
             <ColumnConstraints />
@@ -20,10 +24,10 @@
             <RowConstraints />
          </rowConstraints>
          <children>
-            <Button fx:id="btnPixelart" mnemonicParsing="false" onAction="#obrirPixelart" prefHeight="100.0" prefWidth="100.0" text="Pixelart" />
-            <Button fx:id="btnJocVida" mnemonicParsing="false" onAction="#obrirJocVida" prefHeight="100.0" prefWidth="100.0" text="Joc de la Vida" GridPane.columnIndex="1" />
-            <Button fx:id="btnPescaMines" mnemonicParsing="false" onAction="#obrirPescaMines" prefHeight="100.0" prefWidth="100.0" text="PescaMines" GridPane.rowIndex="1" />
-            <Button fx:id="btnWordle" mnemonicParsing="false" onAction="#obrirWordle" prefHeight="100.0" prefWidth="100.0" text="Wordle" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="btnPixelart" mnemonicParsing="false" onAction="#obrirPixelart" prefHeight="80.0" prefWidth="110.0" text="Pixelart" />
+            <Button fx:id="btnJocVida" mnemonicParsing="false" onAction="#obrirJocVida" prefHeight="80.0" prefWidth="110.0" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" text="Joc de la Vida" GridPane.columnIndex="1" />
+            <Button fx:id="btnPescaMines" mnemonicParsing="false" onAction="#obrirPescaMines" prefHeight="80.0" prefWidth="110.0" style="-fx-background-color: #222; -fx-text-fill: white; -fx-font-weight: bold;" text="PescaMines" GridPane.rowIndex="1" />
+            <Button fx:id="btnWordle" mnemonicParsing="false" onAction="#obrirWordle" prefHeight="80.0" prefWidth="110.0" style="-fx-border-color: lightgrey; -fx-border-width: 3; -fx-border-radius: 5; -fx-background-color: lightblue; -fx-text-fill: white; -fx-background-radius: 7; -fx-font-weight: bold;" text="Wordle" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>
