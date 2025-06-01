@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class IniciController {
@@ -30,12 +31,14 @@ public class IniciController {
     	
         Parent nuevaRaiz;
 		try {
-			nuevaRaiz = FXMLLoader.load(getClass().getResource("/application/Tauler.fxml"));
-	        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-	        Scene nuevaEscena = new Scene(nuevaRaiz);
-	        stage.setScene(nuevaEscena);
-	        stage.show();
-		} catch (IOException e) {
+			TaulerController escena = new TaulerController(new VBox(), 500, 600);
+			
+	        Stage escenario = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+			escenario.setTitle("Dibujando PixelArt");
+			escenario.setScene(escena);
+			escenario.show();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
