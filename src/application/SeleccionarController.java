@@ -103,7 +103,7 @@ public class SeleccionarController implements Initializable{
 			Stage escena = new Stage();
 			escena.setTitle("PescaMines");
 			escena.setUserData(this.u);
-			escena.setScene(new Scene(root));
+			escena.setScene(new Scene(root, 1800, 2000));
 	        escena.setOnCloseRequest(event -> contador.decrementPescaMines());
 			escena.show();
 			contador.incrementPescaMines();
