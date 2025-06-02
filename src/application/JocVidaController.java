@@ -54,30 +54,58 @@ public class JocVidaController implements Initializable{
 	private int totalGeneracions;
 	private int velocitat = 250;
 	
-	public void pausarClick(ActionEvent e) {timeline.pause();}
-	public void reanudarClick(ActionEvent e) {timeline.play();}
+	public void pausarClick(ActionEvent e)
+	{
+		timeline.pause();
+		
+		pausar.setDisable(true);
+		pausar.setStyle("-fx-background-color: #a5d6a7; -fx-text-fill: #757575; -fx-font-weight: bold;");
+		
+		reanudar.setDisable(false);
+		reanudar.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;");
+
+	}
+	public void reanudarClick(ActionEvent e)
+	{
+		timeline.play();
+		
+		pausar.setDisable(false);
+		pausar.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;");
+		
+		reanudar.setDisable(true);
+		reanudar.setStyle("-fx-background-color: #a5d6a7; -fx-text-fill: #757575; -fx-font-weight: bold;");
+	}
 	public void velocitatMenysClick(ActionEvent e)
 	{
 		if (velocitat>10)
 		{
 			this.velocitat-=10;
+			if(velocitat<=10)
+			{
+				velocitatMenys.setDisable(true);
+				velocitatMenys.setStyle("-fx-background-color: #a5d6a7; -fx-text-fill: #757575; -fx-font-weight: bold;");
+			}
 			iniciarTimeline();
 		}
 	}
 	public void velocitatMesClick(ActionEvent e)
 	{
 		this.velocitat+=10;
+		velocitatMenys.setDisable(false);
+		velocitatMenys.setStyle("-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;");
 		iniciarTimeline();
 	}
 	public void pararClick(ActionEvent e)
 	{
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
 			VBox registre = FXMLLoader.load(getClass().getResource("JocVidaFinal.fxml"));
 			Scene escenaRegistre = new Scene(registre);
 			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
 			window.setUserData(new DadesJocVida(tamanyString, tamany, celules, totalCreades, totalMortes, totalGeneracions));
 			window.setScene(escenaRegistre);
 			window.setTitle("Dades del Joc de la vida");
+			window.setOnCloseRequest(event -> contador.decrementJocVida());
 			window.show();
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -141,7 +169,7 @@ public class JocVidaController implements Initializable{
 			}
 			this.celules = tamany*tamany/4;
 			joc.setMaxHeight(tamany*20);
-			joc.setMaxWidth(tamany*20);
+			joc.setMaxWidth(tamany			*20);
 			joc.setPrefHeight(tamany*20);
 			joc.setPrefWidth(tamany*20);
 			joc.setMinHeight(tamany*20);

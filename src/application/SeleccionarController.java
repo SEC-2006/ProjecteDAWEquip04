@@ -10,8 +10,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -40,14 +42,24 @@ public class SeleccionarController implements Initializable{
 	
 	public void obrirPixelart(ActionEvent e) {
 		try {
+			
+			ContadorFinestres contador = ContadorFinestres.getInstance();
+		    if (contador.getPixelArt() >= 1) {
+		    	Alert alerta = new Alert(AlertType.ERROR);
+			    alerta.setTitle("Error");
+			    alerta.setHeaderText("Finestra ja oberta");
+			    alerta.setContentText("\"PixelArt\" ja està obert");
+			    alerta.showAndWait();
+		        return;
+		    }
 			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("Inici.fxml"));
 			Stage escena = new Stage();
 			escena.setTitle("PixelArt");
 			escena.setScene(new Scene(root));
 			escena.setUserData(this.u);
+	        escena.setOnCloseRequest(event -> contador.decrementPixelArt());
 			escena.show();
-
-
+	        contador.incrementPixelArt();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -55,11 +67,22 @@ public class SeleccionarController implements Initializable{
 	
 	public void obrirJocVida(ActionEvent e) {
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
+		    if (contador.getJocVida() >= 1) {
+		    	Alert alerta = new Alert(AlertType.ERROR);
+			    alerta.setTitle("Error");
+			    alerta.setHeaderText("Finestra ja oberta");
+			    alerta.setContentText("\"Joc de la Vida\" ja està obert");
+			    alerta.showAndWait();
+		        return;
+		    }
 			VBox root = (VBox) FXMLLoader.load(getClass().getResource("JocVidaInici.fxml"));
 			Stage escena = new Stage();
 			escena.setTitle("Joc de la Vida");
 			escena.setScene(new Scene(root));
+	        escena.setOnCloseRequest(event -> contador.decrementJocVida());
 			escena.show();
+			contador.incrementJocVida();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -67,12 +90,23 @@ public class SeleccionarController implements Initializable{
 	
 	public void obrirPescaMines(ActionEvent e) {
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
+		    if (contador.getPescaMines() >= 1) {
+		    	Alert alerta = new Alert(AlertType.ERROR);
+			    alerta.setTitle("Error");
+			    alerta.setHeaderText("Finestra ja oberta");
+			    alerta.setContentText("\"Pesca Mines\" ja està obert");
+			    alerta.showAndWait();
+		        return;
+		    }
 			VBox root = (VBox) FXMLLoader.load(getClass().getResource("PescaMines.fxml"));
 			Stage escena = new Stage();
 			escena.setTitle("PescaMines");
 			escena.setUserData(this.u);
 			escena.setScene(new Scene(root, 1800, 2000));
+	        escena.setOnCloseRequest(event -> contador.decrementPescaMines());
 			escena.show();
+			contador.incrementPescaMines();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -80,12 +114,23 @@ public class SeleccionarController implements Initializable{
 
 	public void obrirWordle(ActionEvent e) {
 		try {
+			ContadorFinestres contador = ContadorFinestres.getInstance();
+		    if (contador.getWordle() >= 1) {
+		    	Alert alerta = new Alert(AlertType.ERROR);
+			    alerta.setTitle("Error");
+			    alerta.setHeaderText("Finestra ja oberta");
+			    alerta.setContentText("\"Wordle\" ja està obert");
+			    alerta.showAndWait();
+		        return;
+		    }
 			Pane root = (Pane) FXMLLoader.load(getClass().getResource("Wordle.fxml"));
 			Stage escena = new Stage();
 			escena.setTitle("Wordle");
 			escena.setUserData(this.u);
 			escena.setScene(new Scene(root));
+	        escena.setOnCloseRequest(event -> contador.decrementWordle());
 			escena.show();
+			contador.incrementWordle();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

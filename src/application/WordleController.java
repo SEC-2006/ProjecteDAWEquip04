@@ -4,28 +4,39 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class WordleController implements Initializable {
 
@@ -166,6 +177,7 @@ public class WordleController implements Initializable {
 	@FXML
 	private HBox Pos45;
 
+	private boolean guanyat = false;
 	public final static String RUTA_PARAULES = "WordleParaules.txt";
 	public final static int LONG_H = 5;
 	public final static int LONG_V = 6;
@@ -173,18 +185,44 @@ public class WordleController implements Initializable {
 	private int filaActual = 0;
 	private int columnaActual = 0;
 	private String paraulaAdivinar = "";
-	private HBox[][] posicions = new HBox[6][LONG_H];
+	private HBox[][] posicions = new HBox[LONG_V][LONG_H];
+	private Map<Character, String> prioritatsColors = new HashMap<>();
+	List<String> llistatParaulesYaEstan = new ArrayList<>();
+
+	private Usuari u;
+
+	public void setUsuari(Usuari u) {
+		this.u = u;
+	}
+
+	public Usuari getUsuari() {
+		return this.u;
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
-		File fitxerParaules = new File(RUTA_PARAULES);
-		List<String> llistatParaules = new ArrayList<>();
-		Random aleatori = new Random();
+		Platform.runLater(() -> {
+			paneRoot.requestFocus();
+			Window window = (Stage) paneRoot.getScene().getWindow();
+			this.u = (Usuari) window.getUserData();
+			File fitxerParaules = new File(RUTA_PARAULES);
+			List<String> llistatParaules = new ArrayList<>();
+			Random aleatori = new Random();
 
-		guardarParaules(fitxerParaules, llistatParaules);
+			guardarParaules(fitxerParaules, llistatParaules);
 
-		paraulaAdivinar = llistatParaules.get(aleatori.nextInt(llistatParaules.size()));
+			boolean paraulaGastada = true;
+			while (paraulaGastada) {
+				paraulaAdivinar = llistatParaules.get(aleatori.nextInt(llistatParaules.size()));
+				if (llistatParaulesYaEstan.contains(paraulaAdivinar)) {
+				} else {
+					paraulaGastada = false;
+				}
+			}
+			System.out.println(paraulaAdivinar);
+
+		});
 
 		// posibles posicions per a la graella
 		// fila 0
@@ -224,35 +262,100 @@ public class WordleController implements Initializable {
 		posicions[5][3] = Pos35;
 		posicions[5][4] = Pos45;
 
-		
-
 	}
 
 	// teclat
 	// --------------------------------------------------------------------------------------------------
-	public void detectaTecla(KeyEvent e) {
-		char aux = e.getText().charAt(0);
-		añadirLletra(aux);
+	public void detectaTecla(KeyEvent ke) {
+		try {
+			if (ke.getCode() == KeyCode.BACK_SPACE) {
+				eliminar();
+			} else if (ke.getCode() == KeyCode.ENTER) {
+				enviar();
+			} else {
+				char aux = ke.getText().charAt(0);
+				char auxMayus = Character.toUpperCase(aux);
+				if ((auxMayus >= 'A' && auxMayus <= 'Z') || auxMayus == 'Ñ') {
+					añadirLletra(auxMayus);
+				}
+			}
+
+		} catch (Exception e2) {
+		}
 	}
 
 	// obrir pantalla de guanyar
 	// ------------------------------------------------------------------------------------------
-	public void obrirPrincipal(ActionEvent e) {
-		try {
-			VBox root2 = FXMLLoader.load(getClass().getResource("WordleFelicitats.fxml"));
-			Scene escenaGuanyar = new Scene(root2);
-			Stage window = (Stage) ((Node) e.getSource()).getScene().getWindow();
-			window.setScene(escenaGuanyar);
-			window.setTitle("MissatgeGuanyar");
-			window.show();
-		} catch (IOException e1) {
-			e1.printStackTrace();
+	public void obrirMisatge() {
+		ButtonType boto01 = new ButtonType("Tornar a intentar");
+		ButtonType boto02 = new ButtonType("Tornar al menù");
+		Alert alert = new Alert(AlertType.NONE, "Missatge Wordle", boto01, boto02);
+		alert.setTitle("Missatge");
+		alert.setHeaderText("Resultat de: " + this.u.getNom() + " " + this.u.getCognoms());
+		String missatge = "Paraula: " + paraulaAdivinar + "\n\nIntentos: " + (filaActual + 1)
+				+ "\n\nPuntuacio general: " + consultaIntentos();
+		alert.setContentText(missatge);
+
+		alert.setResizable(true);
+		alert.getDialogPane().setPrefSize(400, 300);
+		alert.getDialogPane().setStyle("-fx-background-color: #FF9999; -fx-font-size: 14px; -fx-font-weight: bold;");
+		if (guanyat) {
+			alert.getDialogPane().setStyle("-fx-background-color: #99FF99; -fx-font-size: 14px; -fx-font-weight: bold;");
 		}
+
+		Node header = alert.getDialogPane().lookup(".header-panel");
+		if (header != null) {
+			if (guanyat) {
+				header.setStyle("-fx-background-color: #66CC66;");
+			} else {
+				header.setStyle("-fx-background-color: #FF6666;");
+			}
+		}
+
+		Optional<ButtonType> resultat = alert.showAndWait();
+		if (resultat.get() == boto01) {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("Wordle.fxml"));
+				Pane root = loader.load();
+				Stage stageActual = (Stage) paneRoot.getScene().getWindow();
+				stageActual.setScene(new Scene(root));
+				stageActual.setTitle("Wordle");
+				stageActual.setUserData(this.u);
+				
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} else if (resultat.get() == boto02) {
+			Stage finestraActual = (Stage) paneRoot.getScene().getWindow();
+			finestraActual.close();
+		}
+
 	}
 
 	// traurer la paraula aleatoria
 	// ------------------------------------------------------------------------------------------
 	private void guardarParaules(File fitxerParaules, List<String> llistatParaules) {
+
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			String usuari = "root";
+			String contrasenya = "root";
+			Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+
+			String sentencia = "SELECT paraula FROM ParaulesWordle WHERE id = " + u.getId();
+			PreparedStatement s = c.prepareStatement(sentencia);
+			ResultSet rs = s.executeQuery();
+
+			while (rs.next()) {
+				String paraula = rs.getString("paraula");
+				llistatParaulesYaEstan.add(paraula);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		try {
 			Scanner lectorFitxer = new Scanner(fitxerParaules);
 			while (lectorFitxer.hasNextLine()) {
@@ -260,9 +363,52 @@ public class WordleController implements Initializable {
 			}
 			lectorFitxer.close();
 
-		} catch (FileNotFoundException e) {
+			if (llistatParaules.size() <= llistatParaulesYaEstan.size()) {
+				Class.forName("org.mariadb.jdbc.Driver");
+				String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+				String usuari = "root";
+				String contrasenya = "root";
+				Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+				String sentencia2 = "DELETE FROM ParaulesWordle WHERE id = " + u.getId();
+				PreparedStatement s = c.prepareStatement(sentencia2);
+				s.executeUpdate();
+				System.out.println("eliminat");
+			}
+
+		} catch (FileNotFoundException | SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	// traurer els intentos totals (puntuacio)
+	// ------------------------------------------------------------------------------------------
+	private int consultaIntentos() {
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			String usuari = "root";
+			String contrasenya = "root";
+			Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+
+			String sentencia = "SELECT victoria1, victoria2, victoria3, victoria4, victoria5, victoria6 FROM PartidesWordle WHERE id = "
+					+ u.getId();
+			PreparedStatement s = c.prepareStatement(sentencia);
+			ResultSet rs = s.executeQuery();
+			int contador = 0;
+			if (rs.next()) {
+				contador += rs.getInt("victoria1");
+				contador += rs.getInt("victoria2");
+				contador += rs.getInt("victoria3");
+				contador += rs.getInt("victoria4");
+				contador += rs.getInt("victoria5");
+				contador += rs.getInt("victoria6");
+			}
+			return contador;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	// restableixer array
@@ -278,6 +424,11 @@ public class WordleController implements Initializable {
 	private void comprobarSiEstan(String paraulaComprovar) {
 		Map<Character, Integer> contador = new HashMap<>();
 		String estil = "-fx-border-color: black; -fx-border-width: 3; -fx-border-radius: 5; -fx-background-radius: 7;";
+		String estilBotons = "-fx-border-color: black; -fx-border-width: 1; -fx-border-radius: 2; -fx-background-radius: 3;";
+		String verd = "-fx-background-color: #6aaa64;";
+		String groc = "-fx-background-color: #c9b458;";
+		String gris = "-fx-background-color: #787c7e;";
+
 		boolean yaComprobat[] = new boolean[LONG_H];
 
 		// contar paraules
@@ -292,9 +443,10 @@ public class WordleController implements Initializable {
 			char lletraContador = Character.toUpperCase(paraulaAdivinar.charAt(i));
 			if (lletraComprovar == lletraContador) {
 				HBox casilla = obtindrerPosicio(filaActual, i);
-				casilla.setStyle(estil + "-fx-background-color: #6aaa64;");
+				casilla.setStyle(estil + verd);
 				contador.put(lletraComprovar, contador.get(lletraComprovar) - 1);
 				yaComprobat[i] = true;
+				colorsBotons(lletraComprovar, estilBotons + verd, "verd");
 			}
 		}
 
@@ -305,8 +457,9 @@ public class WordleController implements Initializable {
 				if (contador.getOrDefault(lletraComprovar, 0) > 0) {
 					yaComprobat[i] = true;
 					HBox casilla = obtindrerPosicio(filaActual, i);
-					casilla.setStyle(estil + "-fx-background-color: #c9b458;");
+					casilla.setStyle(estil + groc);
 					contador.put(lletraComprovar, contador.get(lletraComprovar) - 1);
+					colorsBotons(lletraComprovar, estilBotons + groc, "groc");
 				}
 			}
 		}
@@ -314,9 +467,154 @@ public class WordleController implements Initializable {
 		// gris
 		for (int i = 0; i < LONG_H; i++) {
 			if (yaComprobat[i] == false) {
+				char lletraComprovar = Character.toUpperCase(paraulaComprovar.charAt(i));
 				HBox casilla = obtindrerPosicio(filaActual, i);
-				casilla.setStyle(estil + "-fx-background-color: #787c7e;");
+				casilla.setStyle(estil + gris);
+				colorsBotons(lletraComprovar, estilBotons + gris, "gris");
 			}
+		}
+	}
+
+	// ficar color als botons
+	// ------------------------------------------------------------------------------------------
+	private void colorsBotons(char lletraComprovar, String estil, String opcioColor) {
+		int prioritatNova = obtindrePrioritat(opcioColor);
+		String colorActual = prioritatsColors.get(lletraComprovar);
+		int prioritatActual = obtindrePrioritat(colorActual);
+
+		if (prioritatNova > prioritatActual) {
+			prioritatsColors.put(lletraComprovar, opcioColor);
+
+			switch (lletraComprovar) {
+			case 'Q': {
+
+				BtnQ.setStyle(estil);
+				break;
+			}
+			case 'W': {
+				BtnW.setStyle(estil);
+				break;
+			}
+			case 'E': {
+				BtnE.setStyle(estil);
+				break;
+			}
+			case 'R': {
+				BtnR.setStyle(estil);
+				break;
+			}
+			case 'T': {
+				BtnT.setStyle(estil);
+				break;
+			}
+			case 'Y': {
+				BtnY.setStyle(estil);
+				break;
+			}
+			case 'U': {
+				BtnU.setStyle(estil);
+				break;
+			}
+			case 'I': {
+				BtnI.setStyle(estil);
+				break;
+			}
+			case 'O': {
+				BtnO.setStyle(estil);
+				break;
+			}
+			case 'P': {
+				BtnP.setStyle(estil);
+				break;
+			}
+			case 'A': {
+				BtnA.setStyle(estil);
+				break;
+			}
+			case 'S': {
+				BtnS.setStyle(estil);
+				break;
+			}
+			case 'D': {
+				BtnD.setStyle(estil);
+				break;
+			}
+			case 'F': {
+				BtnF.setStyle(estil);
+				break;
+			}
+			case 'G': {
+				BtnG.setStyle(estil);
+				break;
+			}
+			case 'H': {
+				BtnH.setStyle(estil);
+				break;
+			}
+			case 'J': {
+				BtnJ.setStyle(estil);
+				break;
+			}
+			case 'K': {
+				BtnK.setStyle(estil);
+				break;
+			}
+			case 'L': {
+				BtnL.setStyle(estil);
+				break;
+			}
+			case 'Ñ': {
+				BtnÑ.setStyle(estil);
+				break;
+			}
+			case 'Z': {
+				BtnZ.setStyle(estil);
+				break;
+			}
+			case 'X': {
+				BtnX.setStyle(estil);
+				break;
+			}
+			case 'C': {
+				BtnC.setStyle(estil);
+				break;
+			}
+			case 'V': {
+				BtnV.setStyle(estil);
+				break;
+			}
+			case 'B': {
+				BtnB.setStyle(estil);
+				break;
+			}
+			case 'N': {
+				BtnN.setStyle(estil);
+				break;
+			}
+			case 'M': {
+				BtnM.setStyle(estil);
+				break;
+			}
+			default:
+
+			}
+		}
+
+	}
+
+	// per a que els ya encertats no es solapen
+	// ------------------------------------------------------------------------------------------
+	private int obtindrePrioritat(String opcioColor) {
+		if (opcioColor == null) {
+			return 0;
+		} else if (opcioColor == "gris") {
+			return 1;
+		} else if (opcioColor == "groc") {
+			return 2;
+		} else if (opcioColor == "verd") {
+			return 3;
+		} else {
+			return 0;
 		}
 	}
 
@@ -341,122 +639,23 @@ public class WordleController implements Initializable {
 		return null;
 	}
 
-	// click
-	// --------------------------------------------------------------------------------------------------
-	public void Click_Q(ActionEvent e) {
-		añadirLletra('Q');
+	// funcio per a eliminar
+	// ---------------------------------------------------------------------------------------
+	private void eliminar() {
+		if (columnaActual <= LONG_H && columnaActual > 0) {
+			columnaActual--;
+			HBox casilla = obtindrerPosicio(filaActual, columnaActual);
+			casilla.getChildren().clear();
+		} else if (columnaActual == 0) {
+			HBox casilla = obtindrerPosicio(filaActual, columnaActual);
+			casilla.getChildren().clear();
+		}
+		paraulaActual[columnaActual] = '-';
 	}
 
-	public void Click_W(ActionEvent e) {
-		añadirLletra('W');
-	}
-
-	public void Click_E(ActionEvent e) {
-		añadirLletra('E');
-	}
-
-	public void Click_R(ActionEvent e) {
-		añadirLletra('R');
-	}
-
-	public void Click_T(ActionEvent e) {
-		añadirLletra('T');
-	}
-
-	public void Click_Y(ActionEvent e) {
-		añadirLletra('Y');
-	}
-
-	public void Click_U(ActionEvent e) {
-		añadirLletra('U');
-	}
-
-	public void Click_I(ActionEvent e) {
-		añadirLletra('I');
-	}
-
-	public void Click_O(ActionEvent e) {
-		añadirLletra('O');
-	}
-
-	public void Click_P(ActionEvent e) {
-		añadirLletra('P');
-	}
-
-	// --
-	public void Click_A(ActionEvent e) {
-		añadirLletra('A');
-	}
-
-	public void Click_S(ActionEvent e) {
-		añadirLletra('S');
-	}
-
-	public void Click_D(ActionEvent e) {
-		añadirLletra('D');
-	}
-
-	public void Click_F(ActionEvent e) {
-		añadirLletra('F');
-	}
-
-	public void Click_G(ActionEvent e) {
-		añadirLletra('G');
-	}
-
-	public void Click_H(ActionEvent e) {
-		añadirLletra('H');
-	}
-
-	public void Click_J(ActionEvent e) {
-		añadirLletra('J');
-	}
-
-	public void Click_K(ActionEvent e) {
-		añadirLletra('K');
-	}
-
-	public void Click_L(ActionEvent e) {
-		añadirLletra('L');
-	}
-
-	public void Click_Ñ(ActionEvent e) {
-		añadirLletra('Ñ');
-	}
-
-	// --
-	public void Click_Z(ActionEvent e) {
-		añadirLletra('Z');
-	}
-
-	public void Click_X(ActionEvent e) {
-		añadirLletra('X');
-	}
-
-	public void Click_C(ActionEvent e) {
-		añadirLletra('C');
-	}
-
-	public void Click_V(ActionEvent e) {
-		añadirLletra('V');
-	}
-
-	public void Click_B(ActionEvent e) {
-		añadirLletra('B');
-	}
-
-	public void Click_N(ActionEvent e) {
-		añadirLletra('N');
-	}
-
-	public void Click_M(ActionEvent e) {
-		añadirLletra('M');
-	}
-
-	// -- especials
-	// -------------------------------------------------------------------------------------------
-	// boto de enviar
-	public void Click_Enviar(ActionEvent e) {
+	// funcio per a enviar resposta
+	// ---------------------------------------------------------------------------------------
+	private void enviar() {
 		int contador = 0;
 		String paraulaComprovar = "";
 		for (int i = 0; i < LONG_H; i++) {
@@ -470,7 +669,10 @@ public class WordleController implements Initializable {
 			}
 			if (paraulaComprovar.toUpperCase().equals(paraulaAdivinar.toUpperCase())) {
 				comprobarSiEstan(paraulaComprovar);
-				obrirPrincipal(e);
+				System.out.println("Has guanyat");
+				guanyat = true;
+				guardarEnBBDD(guanyat);
+				obrirMisatge();
 			} else {
 				comprobarSiEstan(paraulaComprovar);
 
@@ -479,25 +681,262 @@ public class WordleController implements Initializable {
 					columnaActual = 0;
 					filaActual++;
 				} else {
+					guardarEnBBDD(guanyat);
+					obrirMisatge();
 					System.out.println("Has pergut");
-					System.out.println(paraulaAdivinar);
 
 				}
 			}
 		}
 	}
 
+	// funcio per a enviar datos de la partida a la base de datos
+	// ---------------------------------------------------------------------------------------
+	private void guardarEnBBDD(boolean victoriaDerrota) {
+		try {
+			Class.forName("org.mariadb.jdbc.Driver");
+			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			String usuari = "root";
+			String contrasenya = "root";
+			Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
+
+			boolean existis = false;
+
+			String sentencia = "INSERT INTO ParaulesWordle (id, paraula) VALUES (?, ?)";
+			PreparedStatement s = c.prepareStatement(sentencia);
+			s.setInt(1, u.getId());
+			s.setString(2, paraulaAdivinar);
+			s.executeUpdate();
+
+			sentencia = "SELECT id FROM PartidesWordle WHERE id = " + u.getId();
+			s = c.prepareStatement(sentencia);
+			ResultSet rs = s.executeQuery();
+
+			// esto es si existis
+			if (rs.next()) {
+				existis = true;
+			}
+
+			if (existis) {
+				String columnaTabla = "";
+				switch (filaActual) {
+				case 0: {
+					columnaTabla = "victoria1";
+					break;
+				}
+				case 1: {
+					columnaTabla = "victoria2";
+					break;
+				}
+				case 2: {
+					columnaTabla = "victoria3";
+					break;
+				}
+				case 3: {
+					columnaTabla = "victoria4";
+					break;
+				}
+				case 4: {
+					columnaTabla = "victoria5";
+					break;
+				}
+				case 5: {
+					if (!victoriaDerrota) {
+						columnaTabla = "derrotes";
+						break;
+					}
+					columnaTabla = "victoria6";
+					break;
+				}
+				}
+
+				if (victoriaDerrota) {
+					sentencia = "UPDATE PartidesWordle SET " + columnaTabla + " = " + columnaTabla + " + 1 WHERE id = "
+							+ u.getId();
+					s = c.prepareStatement(sentencia);
+					s.executeUpdate();
+				} else {
+					sentencia = "UPDATE PartidesWordle SET derrotes = derrotes + 1 WHERE id = " + u.getId();
+					s = c.prepareStatement(sentencia);
+					s.executeUpdate();
+				}
+
+			} else {
+				int Añadir1victoriaODerrota[] = new int[7];
+				if (victoriaDerrota) {
+					Añadir1victoriaODerrota[filaActual] = 1;
+				} else {
+					Añadir1victoriaODerrota[6] = 1;
+				}
+
+				sentencia = "INSERT INTO PartidesWordle (id, victoria1, victoria2, victoria3, victoria4, victoria5, victoria6, derrotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				s = c.prepareStatement(sentencia);
+				s.setInt(1, u.getId());
+				s.setInt(2, Añadir1victoriaODerrota[0]);
+				s.setInt(3, Añadir1victoriaODerrota[1]);
+				s.setInt(4, Añadir1victoriaODerrota[2]);
+				s.setInt(5, Añadir1victoriaODerrota[3]);
+				s.setInt(6, Añadir1victoriaODerrota[4]);
+				s.setInt(7, Añadir1victoriaODerrota[5]);
+				s.setInt(8, Añadir1victoriaODerrota[6]);
+				s.executeUpdate();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	// click
+	// --------------------------------------------------------------------------------------------------
+	public void Click_Q(ActionEvent e) {
+		añadirLletra('Q');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_W(ActionEvent e) {
+		añadirLletra('W');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_E(ActionEvent e) {
+		añadirLletra('E');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_R(ActionEvent e) {
+		añadirLletra('R');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_T(ActionEvent e) {
+		añadirLletra('T');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_Y(ActionEvent e) {
+		añadirLletra('Y');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_U(ActionEvent e) {
+		añadirLletra('U');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_I(ActionEvent e) {
+		añadirLletra('I');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_O(ActionEvent e) {
+		añadirLletra('O');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_P(ActionEvent e) {
+		añadirLletra('P');
+		paneRoot.requestFocus();
+	}
+
+	// --
+	public void Click_A(ActionEvent e) {
+		añadirLletra('A');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_S(ActionEvent e) {
+		añadirLletra('S');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_D(ActionEvent e) {
+		añadirLletra('D');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_F(ActionEvent e) {
+		añadirLletra('F');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_G(ActionEvent e) {
+		añadirLletra('G');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_H(ActionEvent e) {
+		añadirLletra('H');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_J(ActionEvent e) {
+		añadirLletra('J');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_K(ActionEvent e) {
+		añadirLletra('K');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_L(ActionEvent e) {
+		añadirLletra('L');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_Ñ(ActionEvent e) {
+		añadirLletra('Ñ');
+		paneRoot.requestFocus();
+	}
+
+	// --
+	public void Click_Z(ActionEvent e) {
+		añadirLletra('Z');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_X(ActionEvent e) {
+		añadirLletra('X');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_C(ActionEvent e) {
+		añadirLletra('C');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_V(ActionEvent e) {
+		añadirLletra('V');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_B(ActionEvent e) {
+		añadirLletra('B');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_N(ActionEvent e) {
+		añadirLletra('N');
+		paneRoot.requestFocus();
+	}
+
+	public void Click_M(ActionEvent e) {
+		añadirLletra('M');
+		paneRoot.requestFocus();
+	}
+
+	// -- especials
+	// -------------------------------------------------------------------------------------------
+	// boto de enviar
+	public void Click_Enviar(ActionEvent e) {
+		enviar();
+	}
+
 	// boto de eliminar
 	public void Click_Eliminar(ActionEvent e) {
-		if (columnaActual <= LONG_H && columnaActual > 0) {
-			columnaActual--;
-			HBox casilla = obtindrerPosicio(filaActual, columnaActual);
-			casilla.getChildren().clear();
-		} else if (columnaActual == 0) {
-			HBox casilla = obtindrerPosicio(filaActual, columnaActual);
-			casilla.getChildren().clear();
-		}
-		paraulaActual[columnaActual] = '-';
+		eliminar();
 	}
 
 }

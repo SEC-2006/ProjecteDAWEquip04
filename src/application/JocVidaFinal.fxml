@@ -5,22 +5,22 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="principal" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="25.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.JocVidaFinalController">
+<VBox fx:id="principal" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="25.0" style="-fx-background-color: #f4f4f4; -fx-padding: 25px;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.JocVidaFinalController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" text="Dades del Joc de la Vida" textAlignment="CENTER" underline="true">
+      <Label alignment="CENTER" contentDisplay="CENTER" text="Dades del Joc de la Vida" textAlignment="CENTER" underline="true" style="-fx-font-weight: bold; -fx-text-fill: #2e7d32; -fx-font-size: 30px;">
          <font>
             <Font name="System Bold" size="30.0" />
          </font>
       </Label>
-      <Label fx:id="tamanyLabel" text="Tamany seleccionat: xxxxx (?x? caselles)">
+      <Label fx:id="tamanyLabel" text="Tamany seleccionat: xxxxx (?x? caselles)" style="-fx-font-weight: bold; -fx-text-fill: #333333; -fx-font-size: 16px;">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <Label fx:id="celulesLabel" text="nº de cèl·lules finals: xxx" />
-      <Label fx:id="generacionsLabel" text="nº de generacions totals: xxx" />
-      <Label fx:id="totalCreadesLabel" text="nº de cèl·lules creades: xxx" />
-      <Label fx:id="totalMortesLabel" text="nº de cèl·lules mortes: xxx" />
-      <Button fx:id="tornar" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#tornarClick" prefHeight="30.0" prefWidth="100.0" text="Tornar" />
+      <Label fx:id="celulesLabel" text="nº de cèl·lules finals: xxx" style="-fx-font-weight: bold; -fx-text-fill: #333333; -fx-font-size: 14px;" />
+      <Label fx:id="generacionsLabel" text="nº de generacions totals: xxx" style="-fx-font-weight: bold; -fx-text-fill: #333333; -fx-font-size: 14px;" />
+      <Label fx:id="totalCreadesLabel" text="nº de cèl·lules creades: xxx" style="-fx-font-weight: bold; -fx-text-fill: #333333; -fx-font-size: 14px;" />
+      <Label fx:id="totalMortesLabel" text="nº de cèl·lules mortes: xxx" style="-fx-font-weight: bold; -fx-text-fill: #333333; -fx-font-size: 14px;" />
+      <Button fx:id="tornar" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#tornarClick" prefHeight="30.0" prefWidth="100.0" text="Tornar" style="-fx-background-color: #4caf50; -fx-text-fill: white; -fx-font-weight: bold;" />
    </children>
 </VBox>

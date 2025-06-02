@@ -65,6 +65,7 @@ public class PrincipalController {
 			Class.forName("org.mariadb.jdbc.Driver");
 
 			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
+			// String urlBaseDades = "jdbc:mariadb://localhost:3306/ProjecteDAWEquip04";
 			String usuariBaseDades = "root";
 			String contrasenyaBaseDades = "root";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuariBaseDades, contrasenyaBaseDades);
@@ -120,7 +121,11 @@ public class PrincipalController {
 		            }
 		            else
 		            {
-		            	
+		            	Alert alerta = new Alert(AlertType.ERROR);
+					    alerta.setTitle("Error");
+					    alerta.setHeaderText("Dades incorrectes");
+					    alerta.setContentText("La contrasenya no coincideix. Prova un altra o inicia sesió desde un altre usuari");
+					    alerta.showAndWait();
 		            }
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
 					System.out.println(e1);
