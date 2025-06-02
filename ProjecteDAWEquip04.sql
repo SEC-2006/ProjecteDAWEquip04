@@ -80,12 +80,18 @@ CREATE TABLE `Usuaris` (
   `salt` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pixelart`
+--
+
 CREATE TABLE `pixelart` (
   `id_dibuix` int(5) NOT NULL,
   `fila` int(5) NOT NULL,
   `columna`int(5) NOT NULL,
-  `color` varchar(100) NOT NULL,
-
+  `color` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
