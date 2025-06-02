@@ -20,6 +20,7 @@ import java.util.Scanner;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -300,7 +301,8 @@ public class WordleController implements Initializable {
 		alert.getDialogPane().setPrefSize(400, 300);
 		alert.getDialogPane().setStyle("-fx-background-color: #FF9999; -fx-font-size: 14px; -fx-font-weight: bold;");
 		if (guanyat) {
-			alert.getDialogPane().setStyle("-fx-background-color: #99FF99; -fx-font-size: 14px; -fx-font-weight: bold;");
+			alert.getDialogPane()
+					.setStyle("-fx-background-color: #99FF99; -fx-font-size: 14px; -fx-font-weight: bold;");
 		}
 
 		Node header = alert.getDialogPane().lookup(".header-panel");
@@ -313,19 +315,22 @@ public class WordleController implements Initializable {
 		}
 
 		Optional<ButtonType> resultat = alert.showAndWait();
+		ContadorFinestres contador = ContadorFinestres.getInstance();
 		if (resultat.get() == boto01) {
 			try {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("Wordle.fxml"));
 				Pane root = loader.load();
 				Stage stageActual = (Stage) paneRoot.getScene().getWindow();
 				stageActual.setScene(new Scene(root));
+				stageActual.setOnCloseRequest(event -> contador.decrementWordle());
 				stageActual.setTitle("Wordle");
 				stageActual.setUserData(this.u);
-				
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		} else if (resultat.get() == boto02) {
+			contador.decrementWordle();
 			Stage finestraActual = (Stage) paneRoot.getScene().getWindow();
 			finestraActual.close();
 		}
