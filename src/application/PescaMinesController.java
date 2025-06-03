@@ -40,6 +40,9 @@ public class PescaMinesController {
     @FXML private GridPane quadratDmitja;
     @FXML private GridPane quadratDdificil;
 
+  //Dades
+    private String nivellElegit = "";
+    
     
     //Temps del joc
     @FXML private Label ComptadorTempsJoc;
@@ -73,8 +76,7 @@ public class PescaMinesController {
     private boolean primerClic = true;
     
     
-    //Dades
-    private String nivellElegit = "";
+    
     
     
     
@@ -133,9 +135,7 @@ public class PescaMinesController {
             nivellElegit = "dificil";
             iddificil.setOnAction(e -> accedirQuadratJoc("dificil.fxml", "Pescamines dificultat Difícil", e));
         }        
-        
-        
-        
+   
         if (quadratDfacil != null) {
             crearQuadratJoc(quadratDfacil, 9, 9, 10); 
         }
@@ -162,8 +162,10 @@ public class PescaMinesController {
 
             window.setScene(escena);
             window.setTitle(titol);
-           
-            
+            window.setMinWidth(400);
+            window.setMinHeight(400);
+
+
             window.show();
 
         } catch (IOException e1) {
@@ -217,7 +219,7 @@ public class PescaMinesController {
               for (int columna = 0; columna < columnes; columna++) {
             	  
                   Button boto = new Button();
-                  boto.setPrefSize(35, 35);
+                  boto.setPrefSize(30, 30);
                   
                   boto.setStyle("-fx-background-color: #d3d3d3; -fx-border-color: #888; -fx-border-width: 1;");
                   
@@ -285,8 +287,8 @@ public class PescaMinesController {
                 
                 ImageView imatgeBombavista= new ImageView(imatgeBomba);
                 
-                imatgeBombavista.setFitWidth(15);
-                imatgeBombavista.setFitHeight(15);
+                imatgeBombavista.setFitWidth(10);
+                imatgeBombavista.setFitHeight(10);
                 boto.setGraphic(imatgeBombavista);
                 
                 
@@ -477,9 +479,9 @@ public class PescaMinesController {
                         Image imatgeBomba = new Image(getClass().getResource("/img/bomba.png").toExternalForm());
                         ImageView imatgeBombaView = new ImageView(imatgeBomba);
                         
-                        imatgeBombaView.setFitWidth(15);
+                        imatgeBombaView.setFitWidth(10);
                         
-                        imatgeBombaView.setFitHeight(15);
+                        imatgeBombaView.setFitHeight(10);
                         
                         boto.setGraphic(imatgeBombaView);
                         boto.setDisable(false);
@@ -513,8 +515,8 @@ public class PescaMinesController {
                     	
                         Image imatge = new Image(getClass().getResource("/img/bandera.png").toExternalForm());
                         ImageView imatgeBandera = new ImageView(imatge);
-                        imatgeBandera.setFitWidth(15);   
-                        imatgeBandera.setFitHeight(15);
+                        imatgeBandera.setFitWidth(10);   
+                        imatgeBandera.setFitHeight(10);
                         boto.setGraphic(imatgeBandera);
                         boto.setDisable(false);
                         boto.setStyle("-fx-background-color: #d3d3d3; -fx-border-color: #888; -fx-border-width: 1;");
