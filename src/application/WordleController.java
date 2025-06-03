@@ -189,6 +189,8 @@ public class WordleController implements Initializable {
 	private HBox[][] posicions = new HBox[LONG_V][LONG_H];
 	private Map<Character, String> prioritatsColors = new HashMap<>();
 	List<String> llistatParaulesYaEstan = new ArrayList<>();
+	private int vegadesGuanyades[] = new int [7];
+
 
 	private Usuari u;
 
@@ -294,11 +296,19 @@ public class WordleController implements Initializable {
 		alert.setTitle("Missatge");
 		alert.setHeaderText("Resultat de: " + this.u.getNom() + " " + this.u.getCognoms());
 		String missatge = "Paraula: " + paraulaAdivinar + "\n\nIntentos: " + (filaActual + 1)
-				+ "\n\nPuntuacio general: " + consultaIntentos();
+				+ "\n\nPuntuacio general: " + consultaIntentos()
+				+ "\n\nVegades guanyat a la primera: " + vegadesGuanyades[0]
+				+ "\n\nVegades guanyat a la segona: " + vegadesGuanyades[1]
+				+ "\n\nVegades guanyat a la tercera: " + vegadesGuanyades[2]
+				+ "\n\nVegades guanyat a la cuarta: " + vegadesGuanyades[3]
+				+ "\n\nVegades guanyat a la quinta: " + vegadesGuanyades[4]
+				+ "\n\nVegades guanyat a la sexta: " + vegadesGuanyades[5]
+				+ "\n\nVegades pergudes: " + vegadesGuanyades[6];
+				
 		alert.setContentText(missatge);
 
 		alert.setResizable(true);
-		alert.getDialogPane().setPrefSize(400, 300);
+		alert.getDialogPane().setPrefSize(400, 550);
 		alert.getDialogPane().setStyle("-fx-background-color: #FF9999; -fx-font-size: 14px; -fx-font-weight: bold;");
 		if (guanyat) {
 			alert.getDialogPane()
@@ -389,24 +399,32 @@ public class WordleController implements Initializable {
 	// ------------------------------------------------------------------------------------------
 	private int consultaIntentos() {
 		try {
+			
 			Class.forName("org.mariadb.jdbc.Driver");
 			String urlBaseDades = "jdbc:mariadb://192.168.14.11:3306/ProjecteDAWEquip04";
 			String usuari = "root";
 			String contrasenya = "root";
 			Connection c = DriverManager.getConnection(urlBaseDades, usuari, contrasenya);
 
-			String sentencia = "SELECT victoria1, victoria2, victoria3, victoria4, victoria5, victoria6 FROM PartidesWordle WHERE id = "
+			String sentencia = "SELECT victoria1, victoria2, victoria3, victoria4, victoria5, victoria6, derrotes FROM PartidesWordle WHERE id = "
 					+ u.getId();
 			PreparedStatement s = c.prepareStatement(sentencia);
 			ResultSet rs = s.executeQuery();
 			int contador = 0;
 			if (rs.next()) {
 				contador += rs.getInt("victoria1");
+				vegadesGuanyades[0]= rs.getInt("victoria1");
 				contador += rs.getInt("victoria2");
+				vegadesGuanyades[1]= rs.getInt("victoria2");
 				contador += rs.getInt("victoria3");
+				vegadesGuanyades[2]= rs.getInt("victoria3");
 				contador += rs.getInt("victoria4");
+				vegadesGuanyades[3]= rs.getInt("victoria4");
 				contador += rs.getInt("victoria5");
+				vegadesGuanyades[4]= rs.getInt("victoria5");
 				contador += rs.getInt("victoria6");
+				vegadesGuanyades[5]= rs.getInt("victoria6");
+				vegadesGuanyades[6]= rs.getInt("derrotes");
 			}
 			return contador;
 
